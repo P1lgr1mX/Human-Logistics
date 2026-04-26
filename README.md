@@ -1,18 +1,4 @@
-Được rồi, tôi sẽ lược bỏ các icon và trình bày lại theo phong cách tối giản, chuyên nghiệp và tập trung vào cấu trúc kỹ thuật để nhóm của bạn dễ theo dõi nhất.
 
-Bạn copy nội dung này vào file README.md ở thư mục gốc nhé:
-Hệ Thống Quản Lý và Phân Tích Logistics Nhân Đạo
-
-Dự án này là công cụ hỗ trợ điều phối cứu trợ dựa trên phân tích dữ liệu mạng xã hội trong các tình huống thiên tai. Hệ thống tích hợp xử lý ngôn ngữ tự nhiên (NLP) để phân loại thiệt hại và đánh giá tâm lý người dân theo thời gian thực.
-Đội ngũ phát triển
-
-    Nguyễn Huy Quang (ssh1131): Trưởng nhóm, Phát triển ứng dụng Java, Thiết kế hệ thống.
-
-    Nguyễn Minh Trung: Kỹ sư AI, Phân tích dữ liệu.
-
-    Trịnh Đặng Việt Anh: Phát triển Crawler, Tiền xử lý dữ liệu.
-
-    Trương Đức Hoàng: Thiết kế giao diện (UI), Kiểm thử phần mềm.
 
 Cấu trúc thư mục
 
