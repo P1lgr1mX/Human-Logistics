@@ -1,30 +1,53 @@
-🚀 Hướng dẫn cài đặt & Chạy dự án
-1. Khởi động AI Service (Não bộ)
+Được rồi, tôi sẽ lược bỏ các icon và trình bày lại theo phong cách tối giản, chuyên nghiệp và tập trung vào cấu trúc kỹ thuật để nhóm của bạn dễ theo dõi nhất.
 
-Yêu cầu: Python 3.9+
-Bash
+Bạn copy nội dung này vào file README.md ở thư mục gốc nhé:
+Hệ Thống Quản Lý và Phân Tích Logistics Nhân Đạo
 
-cd humanitarian-logistics-ai
-python -m venv venv
-source venv/bin/activate  # Linux/macOS
-# venv\Scripts\activate   # Windows
-pip install -r requirements.txt
-python main.py
+Dự án này là công cụ hỗ trợ điều phối cứu trợ dựa trên phân tích dữ liệu mạng xã hội trong các tình huống thiên tai. Hệ thống tích hợp xử lý ngôn ngữ tự nhiên (NLP) để phân loại thiệt hại và đánh giá tâm lý người dân theo thời gian thực.
+Đội ngũ phát triển
 
-Server sẽ chạy tại: http://127.0.0.1:8000
-2. Khởi động Java Dashboard (Giao diện)
+    Nguyễn Huy Quang (ssh1131): Trưởng nhóm, Phát triển ứng dụng Java, Thiết kế hệ thống.
 
-Yêu cầu: JDK 17+, Maven
-Bash
+    Nguyễn Minh Trung: Kỹ sư AI, Phân tích dữ liệu.
 
-cd humanitarian-logistics
-mvn clean compile
-mvn exec:java -Dexec.mainClass="com.hust.logistics.MainApp"
+    Trịnh Đặng Việt Anh: Phát triển Crawler, Tiền xử lý dữ liệu.
 
-📊 Các tính năng chính
+    Trương Đức Hoàng: Thiết kế giao diện (UI), Kiểm thử phần mềm.
 
-    Bài toán 1: Phân tích biến động tâm lý người dân theo thời gian (Line Chart).
+Cấu trúc thư mục
 
-    Bài toán 2: Phân loại các nhóm thiệt hại: Sập nhà, ngập lụt, sạt lở (Bar Chart).
+Dự án được tổ chức thành hai thành phần độc lập:
 
-    Bài toán 3 & 4: Theo dõi điều phối hàng cứu trợ và mức độ hài lòng của khu vực nhận hỗ trợ.
+    /humanitarian-logistics: Mã nguồn ứng dụng Desktop (Java Maven).
+
+    /humanitarian-logistics-ai: Dịch vụ phân tích cảm xúc và phân loại dữ liệu (Python FastAPI).
+
+Hướng dẫn cài đặt và Vận hành
+1. Khởi chạy Dịch vụ AI (Backend)
+
+Yêu cầu: Python 3.9 trở lên.
+
+    Truy cập thư mục: cd humanitarian-logistics-ai
+
+    Tạo môi trường ảo: python -m venv venv
+
+    Kích hoạt môi trường:
+
+        Linux/macOS: source venv/bin/activate
+
+        Windows: venv\Scripts\activate
+
+    Cài đặt thư viện: pip install -r requirements.txt
+
+    Chạy server: python main.py
+    Địa chỉ mặc định: http://127.0.0.1:8000
+
+2. Khởi chạy Ứng dụng Dashboard (Frontend)
+
+Yêu cầu: JDK 17 và Maven.
+
+    Truy cập thư mục: cd humanitarian-logistics
+
+    Biên dịch dự án: mvn clean compile
+
+    Chạy ứng dụng: mvn exec:java -Dexec.mainClass="com.hust.logistics.MainApp"
