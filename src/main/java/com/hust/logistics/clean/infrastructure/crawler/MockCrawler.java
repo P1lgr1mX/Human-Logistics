@@ -6,10 +6,7 @@ import com.hust.logistics.clean.infrastructure.config.AppConfig;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 
 public class MockCrawler implements SocialMediaCrawler {
     private final AppConfig config;
@@ -28,32 +25,42 @@ public class MockCrawler implements SocialMediaCrawler {
         List<SocialPost> posts = new ArrayList<>();
         List<String> keywords = safe(config.getKeywords());
         List<String> hashtags = safe(config.getHashtags());
+        List<String> damageCats = safe(config.getDamageCategories());
+        List<String> reliefCats = safe(config.getReliefCategories());
+        
         Instant start = config.getStartTime();
         Instant end = config.getEndTime();
 
         long seconds = Math.max(1L, Duration.between(start, end).getSeconds());
-        long step = Math.max(1L, seconds / Math.max(1, keywords.size() + hashtags.size()));
+        int numPosts = 30; // Tăng lên 30 bài để dữ liệu phong phú hơn
+        long step = Math.max(1L, seconds / numPosts);
 
-        int index = 0;
-        for (String keyword : keywords) {
-            String hashtag = hashtags.isEmpty() ? "#relief" : normalizeHashtag(hashtags.get(index % hashtags.size()));
-            Instant timestamp = start.plusSeconds(step * (index + 1));
+        String[] templates = {
+            "Tình hình %s rất căng thẳng, %s đang diễn ra nghiêm trọng. Rất cần %s ngay lúc này! %s",
+            "Cập nhật từ vùng lũ: %s đã phá hủy %s. Người dân đang thiếu %s. Mọi người cẩn trọng. %s",
+            "Cảm ơn các đoàn cứu trợ đã mang %s đến cho bà con vùng %s sau khi chịu %s. %s",
+            "Mọi thứ thật tồi tệ do %s. %s khiến chúng tôi kiệt sức. Hy vọng sớm có %s. %s",
+            "Tin mừng: Công tác khắc phục %s đang tiến triển. %s đã được kiểm soát. %s đang được phân phối. %s"
+        };
+
+        Random random = new Random();
+
+        for (int i = 0; i < numPosts; i++) {
+            String kw = keywords.isEmpty() ? "thiên tai" : keywords.get(random.nextInt(keywords.size()));
+            String dc = damageCats.isEmpty() ? "thiệt hại" : damageCats.get(random.nextInt(damageCats.size()));
+            String rc = reliefCats.isEmpty() ? "nhu yếu phẩm" : reliefCats.get(random.nextInt(reliefCats.size()));
+            String ht = hashtags.isEmpty() ? "#cuutro" : hashtags.get(random.nextInt(hashtags.size()));
+            
+            String template = templates[random.nextInt(templates.length)];
+            String content = String.format(template, kw, dc, rc, ht);
+            
+            Instant timestamp = start.plusSeconds(step * i);
             posts.add(new SocialPost(
                     UUID.randomUUID().toString(),
                     platform(),
-                    "Urgent update: " + keyword + " " + hashtag,
+                    content,
                     timestamp.isAfter(end) ? end : timestamp,
-                    "mock-user-" + (index + 1)
-            ));
-            index++;
-        }
-        if (posts.isEmpty()) {
-            posts.add(new SocialPost(
-                    UUID.randomUUID().toString(),
-                    platform(),
-                    "General humanitarian update #aid",
-                    start,
-                    "mock-user-default"
+                    "user-" + (i + 1)
             ));
         }
         return posts;

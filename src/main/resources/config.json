@@ -1,40 +1,42 @@
 {
   "keywords": [
-    "Yagi typhoon",
-    "flood relief",
-    "landslide damage",
-    "need food supplies",
-    "infrastructure collapse"
+    "bão Yagi",
+    "cứu trợ lũ lụt",
+    "sạt lở đất",
+    "thiếu lương thực",
+    "sập cầu",
+    "ngập lụt"
   ],
   "hashtags": [
     "#YagiTyphoon",
-    "#ReliefEffort",
-    "#EmergencyAid",
-    "#HumanitarianLogistics"
+    "#CuuTroMienBac",
+    "#TinhThanVietNam"
   ],
   "startTime": "2024-09-06T00:00:00Z",
-  "endTime": "2024-09-15T23:59:59Z",
+  "endTime": "2024-09-20T23:59:59Z",
   "apiKeys": {
-    "llama-3.3-70b-versatile": "API KEY HERE"
+    "gemini-2.5-flash": "KEY HERE ",
+    "llama-3.3-70b-versatile": "KEY HERE"
   },
   "damageCategories": [
-    "Affected People",
-    "Economic Disruption",
-    "Damaged Buildings",
-    "Personal Property Loss",
-    "Infrastructure Damage"
+    "Người bị ảnh hưởng",
+    "Gián đoạn kinh tế sản xuất",
+    "Nhà cửa bị hư hỏng",
+    "Tài sản cá nhân bị mất",
+    "Cơ sở hạ tầng bị hư hỏng",
+    "Khác"
   ],
   "reliefCategories": [
-    "Food & Water",
-    "Medical Support",
-    "Shelter & Housing",
-    "Transportation",
-    "Financial Aid"
+    "Nhà ở",
+    "Giao thông",
+    "Thực phẩm",
+    "Y tế",
+    "Tiền mặt"
   ],
   "analysis": {
-    "provider": "groq",
-    "endpoint": "https://api.groq.com/openai/v1/chat/completions",
-    "model": "llama-3.3-70b-versatile",
+    "provider": "gemini",
+    "endpoint": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+    "model": "gemini-2.5-flash",
     "connectTimeoutMs": 5000,
     "readTimeoutMs": 30000
   }

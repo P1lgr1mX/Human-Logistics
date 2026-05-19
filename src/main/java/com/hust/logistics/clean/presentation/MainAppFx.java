@@ -18,6 +18,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
@@ -164,29 +165,53 @@ public class MainAppFx extends Application {
     }
 
     private void handleRunAnalysis() {
+        String keywordsInput = keywordsField.getText();
+        if (keywordsInput != null && !keywordsInput.isBlank()) {
+            config.setKeywords(List.of(keywordsInput.split("[,;]")));
+        }
+        
+        if (startDatePicker.getValue() != null) {
+            config.setStartTime(startDatePicker.getValue().atStartOfDay(java.time.ZoneId.systemDefault()).toInstant());
+        }
+        if (endDatePicker.getValue() != null) {
+            config.setEndTime(endDatePicker.getValue().atTime(23, 59, 59).atZone(java.time.ZoneId.systemDefault()).toInstant());
+        }
+
         updateDisplayArea("Đang xử lý: Thu thập -> Tiền xử lý -> " + config.getAnalysis().getProvider().toUpperCase() + " API -> Hiển thị...");
         
-        // Actually instantiate the client and tasks
         AnalysisClient client = new GptAnalysisClient(config);
-        SocialMediaCrawler crawler = new CrawlerFactory().create("twitter", config);
+        SocialMediaCrawler crawler = new CrawlerFactory().create("mock", config);
         
-        // For demonstration, we'll run the analysis in the UI thread for now
-        // In a production app, this should be in a background Task
         try {
+            List<com.hust.logistics.clean.domain.entity.SocialPost> posts = crawler.crawl();
+            if (posts.isEmpty()) {
+                updateDisplayArea("Không tìm thấy dữ liệu phù hợp.");
+                return;
+            }
+
             switch (selectedTask) {
                 case 1: 
-                    // SentimentTrendTask requires a list of posts
                     SentimentTrendTask trendTask = new SentimentTrendTask(client);
-                    com.hust.logistics.clean.domain.entity.AnalysisResult result1 = trendTask.execute(crawler.crawl());
-                    showSentimentTrend(); 
+                    AnalysisResult result1 = trendTask.execute(posts);
+                    showTextResult(result1); 
                     break;
                 case 2: 
                     DamageAssessmentTask damageTask = new DamageAssessmentTask(client, config);
-                    com.hust.logistics.clean.domain.entity.AnalysisResult result2 = damageTask.execute(crawler.crawl());
-                    showDamageAssessment(); 
+                    AnalysisResult result2 = damageTask.execute(posts);
+                    showTextResult(result2); 
+                    break;
+                case 3:
+                    ReliefAnalysisTask reliefTask = new ReliefAnalysisTask(client, config);
+                    AnalysisResult result3 = reliefTask.execute(posts);
+                    showTextResult(result3);
+                    break;
+                case 4:
+                    GenericAnalyticsTask timeReliefTask = new GenericAnalyticsTask("relief-trend-over-time", client);
+                    AnalysisResult result4 = timeReliefTask.execute(posts);
+                    showTextResult(result4);
                     break;
                 default: 
-                    updateDisplayArea("Kết quả phân tích cho Bài toán " + selectedTask + " (Đang phát triển)"); 
+                    updateDisplayArea("Kết quả phân tích cho Bài toán " + selectedTask); 
                     break;
             }
         } catch (Exception e) {
@@ -195,60 +220,33 @@ public class MainAppFx extends Application {
         }
     }
 
-    private void showSentimentTrend() {
-        final CategoryAxis xAxis = new CategoryAxis();
-        final NumberAxis yAxis = new NumberAxis();
-        xAxis.setLabel("Ngày");
-        yAxis.setLabel("Tỷ lệ (%)");
-
-        final LineChart<String, Number> lineChart = new LineChart<>(xAxis, yAxis);
-        lineChart.setTitle("Xu hướng tâm lý xã hội");
-
-        XYChart.Series<String, Number> positive = new XYChart.Series<>();
-        positive.setName("Tích cực");
-        XYChart.Series<String, Number> negative = new XYChart.Series<>();
-        negative.setName("Tiêu cực");
-
-        // Mock data based on range
-        LocalDate start = startDatePicker.getValue();
-        for (int i = 0; i < 7; i++) {
-            String date = start.plusDays(i).toString();
-            positive.getData().add(new XYChart.Data<>(date, 40 + new Random().nextInt(40)));
-            negative.getData().add(new XYChart.Data<>(date, 10 + new Random().nextInt(30)));
-        }
-
-        lineChart.getData().addAll(positive, negative);
-        displayArea.getChildren().clear();
-        displayArea.getChildren().add(lineChart);
-    }
-
-    private void showDamageAssessment() {
-        final CategoryAxis xAxis = new CategoryAxis();
-        final NumberAxis yAxis = new NumberAxis();
-        xAxis.setLabel("Loại thiệt hại");
-        yAxis.setLabel("Tần suất (lượt đề cập)");
-
-        final BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
-        barChart.setTitle("Thống kê thiệt hại thực tế");
-
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Tần suất");
-
-        List<String> categories = config.getDamageCategories();
-        for (String cat : categories) {
-            series.getData().add(new XYChart.Data<>(cat, new Random().nextInt(100)));
-        }
-
-        barChart.getData().add(series);
-        displayArea.getChildren().clear();
-        displayArea.getChildren().add(barChart);
-    }
-
     private void updateDisplayArea(String text) {
         displayArea.getChildren().clear();
         Label label = new Label(text);
         label.setFont(Font.font(16));
         displayArea.getChildren().add(label);
+    }
+
+    private void showTextResult(AnalysisResult result) {
+        displayArea.getChildren().clear();
+        
+        VBox vbox = new VBox(10);
+        vbox.setPadding(new Insets(20));
+        
+        Label title = new Label("KẾT QUẢ: " + result.getTaskName().toUpperCase());
+        title.setFont(Font.font("System", FontWeight.BOLD, 18));
+        
+        TextArea textArea = new TextArea(result.getSummary());
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+        textArea.setFont(Font.font("Monospaced", 14));
+        VBox.setVgrow(textArea, Priority.ALWAYS);
+        
+        Label scoreLabel = new Label(String.format("Độ tin cậy: %.2f", result.getScore()));
+        scoreLabel.setFont(Font.font("System", FontPosture.ITALIC, 12));
+        
+        vbox.getChildren().addAll(title, textArea, scoreLabel);
+        displayArea.getChildren().add(vbox);
     }
 
     public static void main(String[] args) {
