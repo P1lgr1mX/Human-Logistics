@@ -1,39 +1,53 @@
+# Humanitarian Logistics Desktop (Skeleton)
 
+This repository now includes a Clean Architecture skeleton for a Java Desktop application (JavaFX + Maven) focused on humanitarian logistics from social media data.
 
-Cấu trúc thư mục
+## Clean Architecture layout
 
-Dự án được tổ chức thành hai thành phần độc lập:
+```text
+src/main/java/com/hust/logistics/clean
+├── presentation
+│   └── MainAppFx.java
+├── application
+│   ├── task
+│   │   ├── AnalyticsTask.java
+│   │   ├── DamageCategoryClassificationTask.java
+│   │   ├── ResourcePriorityTask.java
+│   │   ├── SeverityAssessmentTask.java
+│   │   └── UrgentNeedsDetectionTask.java
+│   └── usecase
+│       └── RunAnalyticsUseCase.java
+├── domain
+│   ├── entity
+│   │   ├── AnalysisResult.java
+│   │   └── SocialPost.java
+│   └── gateway
+│       ├── AnalysisClient.java
+│       └── SocialMediaCrawler.java
+└── infrastructure
+    ├── client
+    │   └── DeepSeekAnalysisClient.java
+    ├── config
+    │   ├── AppConfig.java
+    │   └── ConfigLoader.java
+    └── crawler
+        ├── CrawlerStrategyRegistry.java
+        ├── TwitterCrawler.java
+        └── YouTubeCrawler.java
+```
 
-    /humanitarian-logistics: Mã nguồn ứng dụng Desktop (Java Maven).
+## Config file
 
-    /humanitarian-logistics-ai: Dịch vụ phân tích cảm xúc và phân loại dữ liệu (Python FastAPI).
+`src/main/resources/config.json` stores:
+- keywords
+- apiKeys (including DeepSeek key placeholder)
+- damageCategories
+- analysis endpoint + timeout settings
 
-Hướng dẫn cài đặt và Vận hành
-1. Khởi chạy Dịch vụ AI (Backend)
+## Run
 
-Yêu cầu: Python 3.9 trở lên.
+```bash
+mvn clean test
+```
 
-    Truy cập thư mục: cd humanitarian-logistics-ai
-
-    Tạo môi trường ảo: python -m venv venv
-
-    Kích hoạt môi trường:
-
-        Linux/macOS: source venv/bin/activate
-
-        Windows: venv\Scripts\activate
-
-    Cài đặt thư viện: pip install -r requirements.txt
-
-    Chạy server: python main.py
-    Địa chỉ mặc định: http://127.0.0.1:8000
-
-2. Khởi chạy Ứng dụng Dashboard (Frontend)
-
-Yêu cầu: JDK 17 và Maven.
-
-    Truy cập thư mục: cd humanitarian-logistics
-
-    Biên dịch dự án: mvn clean compile
-
-    Chạy ứng dụng: mvn exec:java -Dexec.mainClass="com.hust.logistics.MainApp"
+For JavaFX execution, run `com.hust.logistics.clean.presentation.MainAppFx`.

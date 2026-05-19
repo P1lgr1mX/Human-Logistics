@@ -6,6 +6,7 @@ package com.hust.logistics.model;
 public class AnalysisResult {
     private String sentiment;
     private String damageType;
+    private String reliefSupplies;
     private double confidence;
     private String timestamp;
 
@@ -15,12 +16,21 @@ public class AnalysisResult {
     public AnalysisResult(String sentiment, String damageType, double confidence) {
         this.sentiment = sentiment;
         this.damageType = damageType;
+        this.reliefSupplies = "Khác";
         this.confidence = confidence;
     }
 
-    public AnalysisResult(String sentiment, String damageType, double confidence, String timestamp) {
+    public AnalysisResult(String sentiment, String damageType, String reliefSupplies, double confidence) {
         this.sentiment = sentiment;
         this.damageType = damageType;
+        this.reliefSupplies = reliefSupplies;
+        this.confidence = confidence;
+    }
+
+    public AnalysisResult(String sentiment, String damageType, String reliefSupplies, double confidence, String timestamp) {
+        this.sentiment = sentiment;
+        this.damageType = damageType;
+        this.reliefSupplies = reliefSupplies;
         this.confidence = confidence;
         this.timestamp = timestamp;
     }
@@ -39,6 +49,14 @@ public class AnalysisResult {
 
     public void setDamageType(String damageType) {
         this.damageType = damageType;
+    }
+
+    public String getReliefSupplies() {
+        return reliefSupplies;
+    }
+
+    public void setReliefSupplies(String reliefSupplies) {
+        this.reliefSupplies = reliefSupplies;
     }
 
     public double getConfidence() {
@@ -62,6 +80,7 @@ public class AnalysisResult {
         return "AnalysisResult{" +
                 "sentiment='" + sentiment + '\'' +
                 ", damageType='" + damageType + '\'' +
+                ", reliefSupplies='" + reliefSupplies + '\'' +
                 ", confidence=" + confidence +
                 ", timestamp='" + timestamp + '\'' +
                 '}';

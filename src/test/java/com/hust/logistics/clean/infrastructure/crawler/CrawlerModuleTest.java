@@ -1,0 +1,63 @@
+package com.hust.logistics.clean.infrastructure.crawler;
+
+import com.hust.logistics.clean.domain.entity.SocialPost;
+import com.hust.logistics.clean.domain.gateway.SocialMediaCrawler;
+import com.hust.logistics.clean.infrastructure.config.AppConfig;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import java.time.Instant;
+import java.util.List;
+
+class CrawlerModuleTest {
+
+    @Test
+    void mockCrawlerReturnsData() {
+        AppConfig config = baseConfig();
+        MockCrawler crawler = new MockCrawler(config);
+
+        List<SocialPost> posts = crawler.crawl();
+        Assertions.assertFalse(posts.isEmpty());
+    }
+
+    @Test
+    void mockCrawlerFiltersByKeywordAndHashtag() {
+        AppConfig config = baseConfig();
+        MockCrawler crawler = new MockCrawler(config);
+
+        List<SocialPost> byKeyword = crawler.crawlByKeyword("flood");
+        List<SocialPost> byHashtag = crawler.crawlByHashtag("#relief");
+
+        Assertions.assertFalse(byKeyword.isEmpty());
+        Assertions.assertFalse(byHashtag.isEmpty());
+    }
+
+    @Test
+    void factoryCreatesCrawlerByPlatform() {
+        AppConfig config = baseConfig();
+        CrawlerFactory factory = new CrawlerFactory();
+
+        SocialMediaCrawler mock = factory.create("mock", config);
+        SocialMediaCrawler twitter = factory.create("twitter", config);
+
+        Assertions.assertEquals("mock", mock.platform());
+        Assertions.assertEquals("twitter", twitter.platform());
+    }
+
+    @Test
+    void factoryThrowsForInvalidPlatform() {
+        AppConfig config = baseConfig();
+        CrawlerFactory factory = new CrawlerFactory();
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> factory.create("unknown", config));
+    }
+
+    private AppConfig baseConfig() {
+        AppConfig config = new AppConfig();
+        config.setKeywords(List.of("flood", "need food"));
+        config.setHashtags(List.of("#relief", "#aid"));
+        config.setStartTime(Instant.parse("2026-01-01T00:00:00Z"));
+        config.setEndTime(Instant.parse("2026-12-31T23:59:59Z"));
+        return config;
+    }
+}

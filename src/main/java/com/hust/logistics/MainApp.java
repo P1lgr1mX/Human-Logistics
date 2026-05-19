@@ -59,6 +59,7 @@ public class MainApp {
                     dashboard.appendLine(record.toString());
                     dashboard.appendLine("Sentiment: " + result.getSentiment());
                     dashboard.appendLine("Damage Type: " + result.getDamageType());
+                    dashboard.appendLine("Relief Supplies: " + result.getReliefSupplies());
                     dashboard.appendLine("------------------------------");
                 }
             });

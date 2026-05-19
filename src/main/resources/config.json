@@ -1,0 +1,41 @@
+{
+  "keywords": [
+    "Yagi typhoon",
+    "flood relief",
+    "landslide damage",
+    "need food supplies",
+    "infrastructure collapse"
+  ],
+  "hashtags": [
+    "#YagiTyphoon",
+    "#ReliefEffort",
+    "#EmergencyAid",
+    "#HumanitarianLogistics"
+  ],
+  "startTime": "2024-09-06T00:00:00Z",
+  "endTime": "2024-09-15T23:59:59Z",
+  "apiKeys": {
+    "llama-3.3-70b-versatile": "API KEY HERE"
+  },
+  "damageCategories": [
+    "Affected People",
+    "Economic Disruption",
+    "Damaged Buildings",
+    "Personal Property Loss",
+    "Infrastructure Damage"
+  ],
+  "reliefCategories": [
+    "Food & Water",
+    "Medical Support",
+    "Shelter & Housing",
+    "Transportation",
+    "Financial Aid"
+  ],
+  "analysis": {
+    "provider": "groq",
+    "endpoint": "https://api.groq.com/openai/v1/chat/completions",
+    "model": "llama-3.3-70b-versatile",
+    "connectTimeoutMs": 5000,
+    "readTimeoutMs": 30000
+  }
+}
