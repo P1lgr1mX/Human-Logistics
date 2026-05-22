@@ -1,10 +1,15 @@
 package com.hust.logistics.clean.infrastructure.config;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Configuration
+@ConfigurationProperties(prefix = "app")
 public class AppConfig {
     private List<String> keywords = new ArrayList<>();
     private List<String> hashtags = new ArrayList<>();

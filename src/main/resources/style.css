@@ -1,0 +1,25 @@
+.sidebar-btn:hover {
+    -fx-background-color: #34495e !important;
+    -fx-text-fill: white !important;
+}
+
+.sidebar-btn:focused {
+    -fx-background-color: #3498db !important;
+    -fx-text-fill: white !important;
+}
+
+.text-area {
+    -fx-text-fill: #34495e;
+}
+
+.text-area .content {
+    -fx-background-color: white;
+}
+
+.button {
+    -fx-transition: all 0.3s;
+}
+
+.button:hover {
+    -fx-opacity: 0.8;
+}

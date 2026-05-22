@@ -2,9 +2,11 @@ package com.hust.logistics.clean.infrastructure.crawler;
 
 import com.hust.logistics.clean.domain.gateway.SocialMediaCrawler;
 import com.hust.logistics.clean.infrastructure.config.AppConfig;
+import org.springframework.stereotype.Component;
 
 import java.util.Locale;
 
+@Component
 public class CrawlerFactory {
 
     public SocialMediaCrawler create(String platform, AppConfig config) {

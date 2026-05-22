@@ -1,9 +1,12 @@
 package com.hust.logistics.clean.application.usecase;
 
-import com.hust.logistics.clean.application.task.AnalyticsTask;
+import com.hust.logistics.clean.application.service.LogisticsService;
 import com.hust.logistics.clean.domain.entity.AnalysisResult;
 import com.hust.logistics.clean.domain.entity.SocialPost;
+import com.hust.logistics.clean.domain.gateway.AnalysisClient;
 import com.hust.logistics.clean.domain.gateway.SocialMediaCrawler;
+import com.hust.logistics.clean.infrastructure.config.AppConfig;
+import com.hust.logistics.clean.infrastructure.crawler.CrawlerFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -13,60 +16,45 @@ import java.util.List;
 class RunAnalyticsUseCaseTest {
 
     @Test
-    void executesAllTasks() {
-        SocialMediaCrawler crawler = new StubCrawler();
+    void executesLogisticsServiceTask() {
+        // Use manual stubs instead of Mockito to avoid JDK 25 issues
+        AnalysisClient analysisClient = new StubAnalysisClient();
+        CrawlerFactory crawlerFactory = new StubCrawlerFactory();
+        AppConfig config = new AppConfig();
 
-        RunAnalyticsUseCase useCase = new RunAnalyticsUseCase(
-                crawler,
-                List.of(
-                        new NamedTask("a", 0.1),
-                        new NamedTask("b", 0.2)
-                )
-        );
+        LogisticsService service = new LogisticsService(analysisClient, crawlerFactory, config);
 
-        List<AnalysisResult> results = useCase.execute();
-        Assertions.assertEquals(2, results.size());
+        // Execute task 1
+        AnalysisResult result = service.runTask(1, "test", null, null);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1.0, result.getScore());
+    }
+
+    private static class StubAnalysisClient implements AnalysisClient {
+        @Override
+        public AnalysisResult analyze(String taskName, List<SocialPost> posts) {
+            return new AnalysisResult("task", "summary", 0.9);
+        }
+    }
+
+    private static class StubCrawlerFactory extends CrawlerFactory {
+        @Override
+        public SocialMediaCrawler create(String platform, AppConfig config) {
+            return new StubCrawler();
+        }
     }
 
     private static class StubCrawler implements SocialMediaCrawler {
         @Override
-        public String platform() {
-            return "stub";
-        }
-
+        public String platform() { return "stub"; }
         @Override
         public List<SocialPost> crawl() {
-            return List.of(new SocialPost("1", "stub", "need water", Instant.now(), "tester"));
+            return List.of(new SocialPost("1", "stub", "content", Instant.now(), "author"));
         }
-
         @Override
-        public List<SocialPost> crawlByKeyword(String keyword) {
-            return crawl();
-        }
-
+        public List<SocialPost> crawlByKeyword(String keyword) { return crawl(); }
         @Override
-        public List<SocialPost> crawlByHashtag(String hashtag) {
-            return crawl();
-        }
-    }
-
-    private static class NamedTask implements AnalyticsTask {
-        private final String name;
-        private final double score;
-
-        private NamedTask(String name, double score) {
-            this.name = name;
-            this.score = score;
-        }
-
-        @Override
-        public String name() {
-            return name;
-        }
-
-        @Override
-        public AnalysisResult execute(List<SocialPost> posts) {
-            return new AnalysisResult(name, "ok", score);
-        }
+        public List<SocialPost> crawlByHashtag(String hashtag) { return crawl(); }
     }
 }
