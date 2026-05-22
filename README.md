@@ -1,6 +1,6 @@
 # Humanitarian Logistics Desktop (Skeleton)
 
-This repository now includes a Clean Architecture skeleton for a Java Desktop application (JavaFX + Maven) focused on humanitarian logistics from social media data.
+This repository now includes a Clean Architecture skeleton for a Java Desktop application (JavaFX (frontend) + Maven + Spring-boot (backend) focused on humanitarian logistics from social media data.
 
 ## Clean Architecture layout
 
