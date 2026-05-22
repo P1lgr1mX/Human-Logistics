@@ -77,7 +77,7 @@ mvn clean test
 ```
 
 ```bash
-mvn javafx:run 
+mvn spring-boot:run 
 ```
 Goodluck and have a nice day! 
 For JavaFX execution, run `com.hust.logistics.clean.presentation.MainAppFx`.
