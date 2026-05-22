@@ -5,8 +5,6 @@ This repository now includes a Clean Architecture skeleton for a Java Desktop ap
 ## Clean Architecture layout
 
 ```text
-Human-Logistics )  tree 
-.
 ├── pom.xml
 ├── README.md
 ├── src
@@ -15,13 +13,10 @@ Human-Logistics )  tree
 │   │   │   └── com
 │   │   │       └── hust
 │   │   │           ├── logistics
-│   │   │           │   ├── analyzer
-│   │   │           │   │   ├── GptAnalysisProvider.java
-│   │   │           │   │   ├── KeywordSentimentAnalyzer.java
-│   │   │           │   │   ├── PythonSentimentAnalyzer.java
-│   │   │           │   │   └── SentimentAnalyzer.java
 │   │   │           │   ├── clean
 │   │   │           │   │   ├── application
+│   │   │           │   │   │   ├── service
+│   │   │           │   │   │   │   └── LogisticsService.java
 │   │   │           │   │   │   ├── task
 │   │   │           │   │   │   │   ├── AnalyticsTask.java
 │   │   │           │   │   │   │   ├── DamageAssessmentTask.java
@@ -29,7 +24,6 @@ Human-Logistics )  tree
 │   │   │           │   │   │   │   ├── ReliefAnalysisTask.java
 │   │   │           │   │   │   │   └── SentimentTrendTask.java
 │   │   │           │   │   │   └── usecase
-│   │   │           │   │   │       └── RunAnalyticsUseCase.java
 │   │   │           │   │   ├── domain
 │   │   │           │   │   │   ├── entity
 │   │   │           │   │   │   │   ├── AnalysisResult.java
@@ -41,36 +35,27 @@ Human-Logistics )  tree
 │   │   │           │   │   │   ├── client
 │   │   │           │   │   │   │   └── GptAnalysisClient.java
 │   │   │           │   │   │   ├── config
-│   │   │           │   │   │   │   ├── AppConfig.java
-│   │   │           │   │   │   │   └── ConfigLoader.java
+│   │   │           │   │   │   │   └── AppConfig.java
 │   │   │           │   │   │   ├── crawler
 │   │   │           │   │   │   │   ├── CrawlerFactory.java
-│   │   │           │   │   │   │   ├── CrawlerStrategyRegistry.java
 │   │   │           │   │   │   │   ├── GenericSocialCrawler.java
-│   │   │           │   │   │   │   ├── MockCrawler.java
-│   │   │           │   │   │   │   ├── TwitterCrawler.java
-│   │   │           │   │   │   │   └── YouTubeCrawler.java
+│   │   │           │   │   │   │   └── MockCrawler.java
 │   │   │           │   │   │   └── preprocess
 │   │   │           │   │   │       └── TextPreprocessor.java
 │   │   │           │   │   └── presentation
-│   │   │           │   │       └── MainAppFx.java
-│   │   │           │   ├── crawler
-│   │   │           │   │   ├── DataCrawler.java
-│   │   │           │   │   └── FileDataCrawler.java
-│   │   │           │   ├── MainApp.java
-│   │   │           │   ├── model
-│   │   │           │   │   ├── AnalysisResult.java
-│   │   │           │   │   ├── LogisticsRecord.java
-│   │   │           │   │   └── SocialPost.java
-│   │   │           │   ├── preprocess
-│   │   │           │   │   └── TextPreprocessor.java
-│   │   │           │   └── ui
-│   │   │           │       └── LogisticsDashboard.java
+│   │   │           │   │       ├── gui
+│   │   │           │   │       │   ├── MainView.java
+│   │   │           │   │       │   └── StageInitializer.java
+│   │   │           │   │       └── rest
+│   │   │           │   │           └── LogisticsController.java
+│   │   │           │   ├── HumanitarianLogisticsApplication.java
+│   │   │           │   └── JavaFxApplication.java
 │   │   │           └── logistics-ai
 │   │   │               ├── main.py
 │   │   │               └── requiments.txt
 │   │   └── resources
-│   │       └── config.json
+│   │       ├── application.yml
+│   │       └── style.css
 │   └── test
 │       └── java
 │           └── com
@@ -83,17 +68,8 @@ Human-Logistics )  tree
 │                           └── infrastructure
 │                               └── crawler
 │                                   └── CrawlerModuleTest.java
-└── target
 
-
-## Config file
-
-`src/main/resources/config.json` stores:
-- keywords
-- apiKeys (including Groq and Gemini )
-- damageCategories
-- analysis endpoint + timeout settings
-
+```
 ## Run
 
 ```bash
