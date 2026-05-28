@@ -65,17 +65,6 @@
 
   ---
 
-  👥 Thành viên thực hiện
-
-  ┌──────┬──────────────┬────────────────────┬─────────────────────────────────────────────────────┐
-  │ Icon │ Thành viên   │ Vai trò            │ Công việc trọng tâm                                 │
-  ├──────┼──────────────┼────────────────────┼─────────────────────────────────────────────────────┤
-  │ 👑   │ Nguyễn Văn A │ Leader / Architect │ OOP Design, AI Integration, Prompt Engineering      │
-  │ 🧪   │ Trần Thị B   │ Data Engineer      │ Data Crawler, Text Preprocessing, Config Management │
-  │ 🎨   │ Lê Văn C     │ UI/UX Developer    │ JavaFX Design, Chart Logic, CSS Styling             │
-  └──────┴──────────────┴────────────────────┴─────────────────────────────────────────────────────┘
-  ---
-
   📐 Kiến trúc OOP Linh hoạt
   Dự án được thiết kế để dễ dàng mở rộng theo yêu cầu đề tài:
    * Dễ thêm nguồn dữ liệu: Chỉ cần triển khai thêm Interface SocialMediaCrawler.
