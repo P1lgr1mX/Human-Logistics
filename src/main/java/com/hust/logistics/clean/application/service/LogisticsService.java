@@ -1,3 +1,4 @@
+
 package com.hust.logistics.clean.application.service;
 
 import com.hust.logistics.clean.application.task.*;
@@ -51,7 +52,7 @@ public class LogisticsService {
             case 1 -> new SentimentTrendTask(analysisClient);
             case 2 -> new DamageAssessmentTask(analysisClient, config);
             case 3 -> new ReliefAnalysisTask(analysisClient, config);
-            case 4 -> new GenericAnalyticsTask("relief-trend-over-time", analysisClient);
+            case 4 -> new GenericAnalyticsTask("task-trend", analysisClient);
             default -> throw new IllegalArgumentException("Invalid task ID: " + taskId);
         };
 

@@ -11,7 +11,7 @@ import java.util.List;
  * Task for Problem 3 & 4: Analyze sentiment and satisfaction for each relief category.
  */
 public class ReliefAnalysisTask implements AnalyticsTask {
-    private static final String TASK_NAME = "relief-sentiment-analysis";
+    private static final String TASK_NAME = "task-satisfaction";
     private final AnalysisClient analysisClient;
     private final AppConfig config;
 
@@ -31,10 +31,15 @@ public class ReliefAnalysisTask implements AnalyticsTask {
             return new AnalysisResult(TASK_NAME, "No data to analyze", 0.0);
         }
 
-        List<String> categories = config.getReliefCategories();
-        String prompt = "Phân tích mức độ hài lòng và xu hướng tâm lý của công chúng đối với các loại hàng cứu trợ sau: " 
-                + String.join(", ", categories) + ".\n"
-                + "Đối với mỗi loại, hãy xác định tỷ lệ tích cực/tiêu cực và tóm tắt lý do chính.";
+        String categories = String.join(", ", config.getReliefCategories());
+        String prompt = "NHIỆM VỤ: Phân tích mức độ hài lòng của công chúng đối với công tác cứu trợ các mặt hàng: " + categories + ".\n" +
+                "YÊU CẦU:\n" +
+                "1. Đánh giá tỷ lệ Hài lòng, Trung lập và Không hài lòng dựa trên nội dung các bài đăng.\n" +
+                "2. Tóm tắt các lý do chính khiến người dân hài lòng hoặc chưa hài lòng.\n" +
+                "3. Định dạng kết quả báo cáo rõ ràng.\n\n" +
+                "BẮT BUỘC: Cuối báo cáo phải có dòng dữ liệu sau để vẽ biểu đồ:\n" +
+                "SATISFACTION_DATA: HAPPY=x, NEUTRAL=y, UNHAPPY=z\n" +
+                "(Với x, y, z là tỷ lệ phần trăm, tổng bằng 100).";
 
         return analysisClient.analyze(prompt, posts);
     }

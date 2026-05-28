@@ -50,6 +50,11 @@ public class GptAnalysisClient implements AnalysisClient {
 
     @Override
     public AnalysisResult analyze(String taskName, List<SocialPost> posts) {
+        // Kiểm tra nếu API Key chưa được cấu hình
+        if (apiKey == null || apiKey.isEmpty() || apiKey.equals("API_KEY_HERE")) {
+            return getMockResult(taskName);
+        }
+
         String combinedText = posts.stream()
                 .map(post -> preprocessor.preprocess(post.getContent()))
                 .collect(Collectors.joining("\n---\n"));
@@ -63,7 +68,8 @@ public class GptAnalysisClient implements AnalysisClient {
             } catch (Exception e) {
                 retryCount++;
                 if (retryCount > maxRetries) {
-                    return new AnalysisResult(taskName, "Lỗi API sau " + maxRetries + " lần thử: " + e.getMessage(), 0.0);
+                    return new AnalysisResult(taskName, "Lỗi API sau " + maxRetries + " lần thử: " + e.getMessage() + 
+                            "\n\n(Gợi ý: Hãy kiểm tra API Key trong application.yml hoặc sử dụng chế độ Mock)", 0.0);
                 }
                 try { Thread.sleep(1000); } catch (InterruptedException ignored) {}
             }
@@ -71,15 +77,76 @@ public class GptAnalysisClient implements AnalysisClient {
         return new AnalysisResult(taskName, "Lỗi không xác định", 0.0);
     }
 
+    private AnalysisResult getMockResult(String taskName) {
+        String keywords = String.join("", config.getKeywords());
+        long seed = 0;
+        for (char c : keywords.toCharArray()) seed += c;
+        java.util.Random random = new java.util.Random(seed + taskName.length());
+
+        int v1 = 20 + random.nextInt(60); 
+        int v2 = 5 + random.nextInt(100 - v1 - 10);
+        int v3 = 100 - v1 - v2;
+
+        String summary = "--- KẾT QUẢ MÔ PHỎNG ---\n" +
+                "Hệ thống phân tích dựa trên từ khóa: [" + keywords + "]\n\n";
+
+        if (taskName.equals("task-sentiment")) {
+            summary += String.format("DATA_POINTS: POS=%d, NEU=%d, NEG=%d", v1, v3, v2);
+        } else if (taskName.equals("task-satisfaction")) {
+            summary += String.format("SATISFACTION_DATA: HAPPY=%d, NEUTRAL=%d, UNHAPPY=%d", v1, v3, v2);
+        } else if (taskName.equals("task-trend")) {
+            java.time.LocalDate start = config.getStartTime().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+            java.time.LocalDate end = config.getEndTime().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+            long days = java.time.temporal.ChronoUnit.DAYS.between(start, end) + 1;
+            if (days > 10) days = 10; // Giới hạn hiển thị 10 điểm để biểu đồ đẹp
+
+            StringBuilder trendData = new StringBuilder("TREND_DATA: ");
+            int lastVal = 30 + random.nextInt(40);
+            for (int i = 0; i < days; i++) {
+                java.time.LocalDate current = start.plusDays(i);
+                // Làm mượt dữ liệu: giá trị sau phụ thuộc vào giá trị trước
+                int change = random.nextInt(20) - 10; 
+                lastVal = Math.max(10, Math.min(100, lastVal + change));
+
+                trendData.append(current.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM")))
+                         .append("=")
+                         .append(lastVal);
+                if (i < days - 1) trendData.append(", ");
+            }
+            summary += trendData.toString();
+        }
+ else if (taskName.equals("task-damage")) {
+            summary += String.format("Báo cáo thiệt hại:\n- Nhà cửa: %d vụ\n- Hạ tầng: %d vụ\n- Kinh tế: %d vụ", v1/10, v2/10, v3/10);
+        }
+
+        return new AnalysisResult(taskName, summary, 0.99);
+    }
+
+
     private AnalysisResult callApi(String taskName, String text) throws IOException, InterruptedException {
         String provider = config.getAnalysis().getProvider();
-        String systemPrompt = "Bạn là một hệ thống AI phân tích dữ liệu cứu trợ nhân đạo chuyên nghiệp. " +
+        String dataFormatInstruction = "";
+        if (taskName.equals("task-sentiment")) {
+            dataFormatInstruction = "DATA_POINTS: POS=x, NEU=y, NEG=z";
+        } else if (taskName.equals("task-satisfaction")) {
+            dataFormatInstruction = "SATISFACTION_DATA: HAPPY=x, NEUTRAL=y, UNHAPPY=z";
+        } else if (taskName.equals("task-trend")) {
+            java.time.LocalDate s = config.getStartTime().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+            java.time.LocalDate e = config.getEndTime().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+            String dateRange = s.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM")) + " đến " + 
+                               e.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM"));
+            dataFormatInstruction = "TREND_DATA: dd/MM=val1, dd/MM=val2... (với các ngày trong khoảng " + dateRange + ")";
+        } else {
+             dataFormatInstruction = "Báo cáo chi tiết dạng văn bản.";
+        }
+
+        String systemPrompt = "Bạn là một hệ thống AI phân tích dữ liệu cứu trợ nhân đạo chuyên nghiệp.\n" +
                 "Nhiệm vụ của bạn là phân tích văn bản đầu vào và thực hiện nhiệm vụ: " + taskName + ".\n" +
-                "YÊU CẦU QUAN TRỌNG:\n" +
-                "- Chỉ trả về định dạng JSON chuẩn.\n" +
-                "- Không thêm bất kỳ văn bản giải thích nào ngoài JSON.\n" +
-                "- Các trường trong JSON phải bao gồm: \"summary\" (tóm tắt kết quả), \"score\" (độ tin cậy từ 0.0 đến 1.0).\n" +
-                "Ví dụ: {\"summary\": \"Kết quả phân tích...\", \"score\": 0.95}";
+                "YÊU CẦU BẮT BUỘC:\n" +
+                "1. Trả về định dạng JSON với các trường: \"summary\" và \"score\".\n" +
+                "2. Trong trường \"summary\", bạn PHẢI thêm dòng dữ liệu sau ở cuối cùng:\n" +
+                dataFormatInstruction + "\n" +
+                "(Trong đó x, y, z là tỷ lệ phần trăm ước tính, tổng bằng 100).";
 
         String requestBody;
         if ("google".equalsIgnoreCase(provider)) {
@@ -118,7 +185,7 @@ public class GptAnalysisClient implements AnalysisClient {
             requestBuilder.header("Authorization", "Bearer " + apiKey);
         }
 
-        HttpResponse<String> response = httpClient.send(requestBuilder.build(), HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = httpClient.send(requestBuilder.build(), HttpResponse.BodyHandlers.ofString(java.nio.charset.StandardCharsets.UTF_8));
         
         if (response.statusCode() != 200) {
             throw new IOException("HTTP " + response.statusCode() + ": " + response.body());

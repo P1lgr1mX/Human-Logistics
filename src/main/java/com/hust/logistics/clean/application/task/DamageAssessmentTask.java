@@ -34,36 +34,17 @@ public class DamageAssessmentTask implements AnalyticsTask {
             return new AnalysisResult(TASK_NAME, "No data to analyze", 0.0);
         }
 
-        List<String> categories = config.getDamageCategories();
-        Map<String, Integer> frequencyMap = new HashMap<>();
+        String instruction = "NHIỆM VỤ: Thống kê thiệt hại dựa trên các danh mục sau:\n" +
+                "1. Nhà cửa bị hư hỏng: Các bài đăng nói về sập nhà, tốc mái, ngập nhà.\n" +
+                "2. Gián đoạn kinh tế sản xuất: Mất mùa, chết gia súc, hỏng xưởng, dừng kinh doanh.\n" +
+                "3. Tài sản cá nhân bị mất: Hỏng xe cộ, đồ gia dụng, trôi đồ đạc.\n" +
+                "4. Cơ sở hạ tầng bị hư hỏng: Sập cầu, hỏng đường, đổ cột điện, mất mạng.\n" +
+                "5. Người bị ảnh hưởng: Bị thương, mất tích, cần cứu hộ y tế.\n" +
+                "6. Khác: Các thiệt hại không thuộc nhóm trên.\n\n" +
+                "QUY TẮC: Chỉ đếm các trường hợp riêng biệt. Trình bày kết quả theo định dạng:\n" +
+                "- Danh mục: X occurrences\n" +
+                "Cuối báo cáo PHẢI có dòng DATA_POINTS cho biểu đồ.";
         
-        // Initialize frequency map with categories from config
-        for (String category : categories) {
-            frequencyMap.put(category, 0);
-        }
-        // Ensure "Khác" is always present
-        frequencyMap.putIfAbsent("Khác", 0);
-
-        // Analyze each post content for damage keywords (simplified simulation)
-        for (SocialPost post : posts) {
-            String content = post.getContent().toLowerCase();
-            boolean matched = false;
-            for (String category : categories) {
-                if (content.contains(category.toLowerCase())) {
-                    frequencyMap.put(category, frequencyMap.get(category) + 1);
-                    matched = true;
-                }
-            }
-            if (!matched) {
-                frequencyMap.put("Khác", frequencyMap.get("Khác") + 1);
-            }
-        }
-
-        StringBuilder summaryBuilder = new StringBuilder("Damage Assessment Statistics:\n");
-        frequencyMap.forEach((category, count) -> {
-            summaryBuilder.append(String.format("- %s: %d occurrences\n", category, count));
-        });
-
-        return new AnalysisResult(TASK_NAME, summaryBuilder.toString(), 1.0);
+        return analysisClient.analyze(instruction, posts);
     }
 }

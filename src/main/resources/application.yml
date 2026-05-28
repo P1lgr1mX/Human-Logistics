@@ -13,7 +13,7 @@ app:
   startTime: "2024-09-06T00:00:00Z"
   endTime: "2024-09-20T23:59:59Z"
   apiKeys:
-    gemini-1.5-flash: "API_KEY_HERE"
+    gemini-3.1-flash-lite: "API_KEY_HERE"
     llama-3.3-70b-versatile: "API_KEY_HERE"
   damageCategories:
     - "Người bị ảnh hưởng"
@@ -30,7 +30,7 @@ app:
     - "Tiền mặt"
   analysis:
     provider: "google"
-    endpoint: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+    endpoint: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent"
     model: "gemini-1.5-flash"
     connectTimeoutMs: 5000
     readTimeoutMs: 30000
