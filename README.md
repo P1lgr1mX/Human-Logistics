@@ -61,8 +61,9 @@
 
   3. Lệnh chạy ứng dụng
   Mở Terminal tại thư mục gốc và gõ:
-   1 mvn clean spring-boot:run
-
+```
+    mvn clean spring-boot:run
+```
   ---
 
   📐 Kiến trúc OOP Linh hoạt
