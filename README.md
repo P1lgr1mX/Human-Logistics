@@ -2,11 +2,6 @@
   📦 Humanitarian Logistics AI Analysis Dashboard 🚀
   > Đề tài: Ứng dụng dữ liệu mạng xã hội để nâng cao hiệu quả trong Logistics nhân đạo.
 
-  ![Java Version (https://img.shields.io/badge/Java-17%2B-orange.svg)](https://www.oracle.com/java/)
-  ![Framework (https://img.shields.io/badge/Framework-Spring%20Boot%203.2-green.svg)](https://spring.io/projects/spring-boot)
-  ![UI (https://img.shields.io/badge/UI-JavaFX%2021-blue.svg)](https://openjfx.io/)
-  ![AI (https://img.shields.io/badge/AI-Google%20Gemini-red.svg)](https://aistudio.google.com/)
-
   ---
 
   🌟 Giới thiệu Dự án
