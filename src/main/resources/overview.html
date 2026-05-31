@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="vi">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Tổng quan Dự án Humanitarian Logistics</title>
+</head>
+<body>
+    <h1>Hệ thống Phân tích Logistics Nhân đạo (Humanitarian Logistics System)</h1>
+    <p>
+        Chào mừng bạn đến với tài liệu kỹ thuật của dự án <b>Humanitarian Logistics</b>. 
+        Đây là một hệ thống được thiết kế để thu thập và phân tích dữ liệu từ mạng xã hội (Twitter, YouTube, Facebook, TikTok) 
+        nhằm hỗ trợ công tác cứu trợ nhân đạo trong các tình huống thiên tai hoặc khẩn cấp.
+    </p>
+
+    <h2>1. Kiến trúc Tổng thể (Clean Architecture)</h2>
+    <p>
+        Dự án được xây dựng dựa trên nguyên lý <b>Clean Architecture</b>, giúp tách biệt mã nguồn thành các lớp (layers) 
+        để dễ dàng bảo trì, kiểm thử và mở rộng.
+    </p>
+    <ul>
+        <li><b>Domain Layer:</b> Chứa các quy tắc nghiệp vụ cốt lõi (Entities) và các giao diện (Interfaces).</li>
+        <li><b>Application Layer:</b> Điều phối luồng dữ liệu và thực thi các ca sử dụng (Use Cases/Services).</li>
+        <li><b>Infrastructure Layer:</b> Cài đặt chi tiết các công cụ bên ngoài (Crawlers, Clients, Database, Config).</li>
+        <li><b>Presentation Layer:</b> Giao diện người dùng (REST API và JavaFX GUI).</li>
+    </ul>
+
+    <h2>2. Chi tiết các Package</h2>
+
+    <h3>2.1. Domain Layer (com.hust.logistics.clean.domain)</h3>
+    <p>Đây là lớp quan trọng nhất, không phụ thuộc vào bất kỳ thư viện bên ngoài nào.</p>
+    <ul>
+        <li><code>entity/SocialPost.java</code>: Đại diện cho một bài đăng trên mạng xã hội (ID, nội dung, nền tảng, thời gian).</li>
+        <li><code>entity/AnalysisResult.java</code>: Kết quả phân tích (Loại phân tích, nội dung phản hồi, điểm số tin cậy).</li>
+        <li><code>gateway/SocialMediaCrawler.java</code>: Interface định nghĩa cách thu thập dữ liệu.</li>
+        <li><code>gateway/AnalysisClient.java</code>: Interface định nghĩa cách gửi dữ liệu đi phân tích (ví dụ: qua GPT AI).</li>
+    </ul>
+
+    <h3>2.2. Application Layer (com.hust.logistics.clean.application)</h3>
+    <p>Lớp này chứa logic xử lý các tác vụ phân tích cụ thể.</p>
+    <ul>
+        <li><code>service/LogisticsService.java</code>: Service trung tâm điều phối việc thu thập dữ liệu và chạy các tác vụ phân tích.</li>
+        <li><code>task/AnalyticsTask.java</code>: Interface chung cho các loại phân tích.</li>
+        <li><code>task/SentimentTrendTask.java</code>: Phân tích xu hướng cảm xúc của người dân.</li>
+        <li><code>task/DamageAssessmentTask.java</code>: Đánh giá mức độ thiệt hại dựa trên nội dung bài đăng.</li>
+        <li><code>task/ReliefAnalysisTask.java</code>: Phân tích nhu cầu cứu trợ.</li>
+    </ul>
+
+    <h3>2.3. Infrastructure Layer (com.hust.logistics.clean.infrastructure)</h3>
+    <p>Lớp này thực hiện các kết nối kỹ thuật thực tế.</p>
+    <ul>
+        <li><code>crawler/CrawlerFactory.java</code>: Khởi tạo Crawler phù hợp cho từng nền tảng.</li>
+        <li><code>crawler/impl/GenericSocialCrawler.java</code>: Cài đặt chung cho việc thu thập dữ liệu mạng xã hội.</li>
+        <li><code>crawler/impl/YoutubeAdapter.java</code>: Chuyển đổi dữ liệu từ YouTube sang định dạng chuẩn của hệ thống.</li>
+        <li><code>client/GptAnalysisClient.java</code>: Sử dụng API của GPT để phân tích văn bản.</li>
+        <li><code>config/AppConfig.java</code>: Quản lý các tham số cấu hình hệ thống (từ khóa, thời gian, API keys).</li>
+    </ul>
+
+    <h3>2.4. Presentation Layer (com.hust.logistics.clean.presentation)</h3>
+    <p>Nơi người dùng tương tác với hệ thống.</p>
+    <ul>
+        <li><code>gui/MainView.java</code>: Controller chính cho giao diện JavaFX.</li>
+        <li><code>rest/LogisticsController.java</code>: Cung cấp các API REST cho phép tích hợp với các hệ thống khác.</li>
+    </ul>
+
+    <h2>3. Luồng hoạt động (Workflow)</h2>
+    <ol>
+        <li>Người dùng nhập từ khóa và thời gian trên <b>JavaFX GUI</b>.</li>
+        <li><b>LogisticsService</b> nhận yêu cầu, yêu cầu <b>CrawlerFactory</b> tạo Crawler.</li>
+        <li>Dữ liệu từ mạng xã hội được thu thập và chuẩn hóa thành danh sách <code>SocialPost</code>.</li>
+        <li>Service chọn một <b>AnalyticsTask</b> (ví dụ: Đánh giá thiệt hại).</li>
+        <li>Task gửi dữ liệu đến <b>GptAnalysisClient</b> để xử lý bằng AI.</li>
+        <li>Kết quả trả về được hiển thị lên màn hình hoặc trả qua API.</li>
+    </ol>
+
+    <h2>4. Thành phần AI (logistics-ai)</h2>
+    <p>
+        Bên cạnh mã nguồn Java, hệ thống còn tích hợp một module Python (<code>main.py</code>) 
+        chuyên trách các mô hình học sâu (Deep Learning) để tiền xử lý hoặc phân tích nâng cao.
+    </p>
+
+    <hr>
+    <p align="center"><i>Tài liệu này được biên soạn để hỗ trợ đội ngũ phát triển nắm bắt nhanh cấu trúc dự án.</i></p>
+</body>
+</html>
