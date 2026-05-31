@@ -95,7 +95,8 @@ public class GenericSocialCrawler implements SocialMediaCrawler {
                 .toList();
     }
 
-    private boolean containsIgnoreCase(String content, String term) {
-        return content.toLowerCase(Locale.ROOT).contains(term.toLowerCase(Locale.ROOT));
+    private boolean containsIgnoreCase(String str, String searchStr) {
+        if (str == null || searchStr == null) return false;
+        return str.toLowerCase(Locale.ROOT).contains(searchStr.toLowerCase(Locale.ROOT));
     }
 }

@@ -1,0 +1,30 @@
+package com.hust.logistics.clean.infrastructure.config;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ConfigurationProperties(prefix = "youtube")
+public class YoutubeConfig {
+
+    private String baseUrl = "https://www.googleapis.com/youtube/v3";
+    private String apiKey;
+
+    // Getters and Setters
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        /* Chú ý: Dòng này đã được sửa dấu ngoặc nhọn kết thúc của class */
+        this.baseUrl = baseUrl;
+    }
+
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
+    }
+}

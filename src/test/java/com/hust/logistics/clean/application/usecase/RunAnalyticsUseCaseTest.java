@@ -34,7 +34,7 @@ class RunAnalyticsUseCaseTest {
     private static class StubAnalysisClient implements AnalysisClient {
         @Override
         public AnalysisResult analyze(String taskName, List<SocialPost> posts) {
-            return new AnalysisResult("task", "summary", 0.9);
+            return new AnalysisResult("task", "summary", 1.0);
         }
     }
 
