@@ -9,20 +9,22 @@ import org.springframework.web.client.RestTemplate;
 
 import com.hust.logistics.clean.domain.entity.SocialPost;
 import com.hust.logistics.clean.domain.gateway.SocialMediaCrawler;
+import com.hust.logistics.clean.infrastructure.config.AppConfig;
 import com.hust.logistics.clean.infrastructure.config.YoutubeConfig;
 import com.hust.logistics.clean.infrastructure.crawler.impl.YoutubeDTO.YoutubeVideoResponse;
 
 @Service
-@Profile("prod")
 public class YoutubeAdapter implements SocialMediaCrawler {
 
     private final RestTemplate restTemplate;
     private final YoutubeConfig config; 
+    private final AppConfig appConfig;
     private final YoutubeMapper mapper; 
     
-    public YoutubeAdapter(RestTemplate restTemplate, YoutubeConfig config, YoutubeMapper mapper) {
+    public YoutubeAdapter(RestTemplate restTemplate, YoutubeConfig config, AppConfig appConfig, YoutubeMapper mapper) {
         this.restTemplate = restTemplate;
         this.config = config;
+        this.appConfig = appConfig;
         this.mapper = mapper;
     }
 
@@ -33,13 +35,20 @@ public class YoutubeAdapter implements SocialMediaCrawler {
 
     @Override
     public List<SocialPost> crawl() {
-        return crawlByKeyword("humanitarian logistics");
+        String query = "humanitarian logistics";
+        if (appConfig.getKeywords() != null && !appConfig.getKeywords().isEmpty()) {
+            query = String.join(" ", appConfig.getKeywords());
+        }
+        return crawlByKeyword(query);
     }
 
     @Override
     public List<SocialPost> crawlByKeyword(String keyword) {
-        String url = String.format("%s/search?part=snippet&q=%s&key=%s",
-                config.getBaseUrl(), keyword, config.getApiKey());
+        String startTime = appConfig.getStartTime().toString(); // ISO-8601 format
+        String endTime = appConfig.getEndTime().toString();
+        
+        String url = String.format("%s/search?part=snippet&q=%s&key=%s&type=video&publishedAfter=%s&publishedBefore=%s&maxResults=50",
+                config.getBaseUrl(), keyword, config.getApiKey(), startTime, endTime);
         try {
             YoutubeVideoResponse response = restTemplate.getForObject(url, YoutubeVideoResponse.class);
             return mapper.toSocialPosts(response);

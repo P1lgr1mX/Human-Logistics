@@ -41,11 +41,12 @@ public class LogisticsService {
             // Fallback to default if parsing fails
         }
 
-        SocialMediaCrawler crawler = crawlerFactory.create("mock", config);
+        SocialMediaCrawler crawler = crawlerFactory.create(config.getPlatform(), config);
         List<SocialPost> posts = crawler.crawl();
 
+
         if (posts.isEmpty()) {
-            return new AnalysisResult("Error", "No data found for the given criteria", 0.0);
+            return new AnalysisResult("Error", "KHÔNG TÌM THẤY DỮ LIỆU: Vui lòng kiểm tra lại từ khóa hoặc API Key của YouTube. Hiện tại hệ thống không thể lấy thông tin từ YouTube.", 0.0);
         }
 
         AnalyticsTask task = switch (taskId) {

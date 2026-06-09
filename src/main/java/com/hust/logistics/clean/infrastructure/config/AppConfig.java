@@ -18,7 +18,16 @@ public class AppConfig {
     private Map<String, String> apiKeys = Map.of();
     private List<String> damageCategories = new ArrayList<>();
     private List<String> reliefCategories = new ArrayList<>();
+    private String platform = "mock";
     private AnalysisConfig analysis = new AnalysisConfig();
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
 
     public List<String> getKeywords() {
         return keywords;
