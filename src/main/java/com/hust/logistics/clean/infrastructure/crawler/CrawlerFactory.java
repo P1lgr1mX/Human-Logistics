@@ -1,7 +1,10 @@
 package com.hust.logistics.clean.infrastructure.crawler;
 
-import com.hust.logistics.clean.domain.gateway.SocialMediaCrawler;
+import com.hust.logistics.clean.infrastructure.crawler.impl.MockCrawler;
+import com.hust.logistics.clean.infrastructure.crawler.impl.GenericSocialCrawler;
 import com.hust.logistics.clean.infrastructure.config.AppConfig;
+import com.hust.logistics.clean.domain.gateway.SocialMediaCrawler;
+import com.hust.logistics.clean.infrastructure.config.YoutubeConfig;
 import org.springframework.stereotype.Component;
 
 import java.util.Locale;

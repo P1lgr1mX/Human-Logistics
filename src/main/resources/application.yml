@@ -22,7 +22,6 @@ app:
   endTime: "2024-09-20T23:59:59Z"
   apiKeys:
     gemini-3.1-flash-lite: "API_KEY_HERE"
-    llama-3.3-70b-versatile: "API_KEY_HERE"
   damageCategories:
     - "Người bị ảnh hưởng"
     - "Gián đoạn kinh tế sản xuất"
