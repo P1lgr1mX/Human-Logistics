@@ -1,12 +1,12 @@
 package com.hust.logistics.clean.infrastructure.crawler;
-
+import com.hust.logistics.clean.infrastructure.crawler.impl.MockCrawler;
 import com.hust.logistics.clean.domain.entity.SocialPost;
 import com.hust.logistics.clean.domain.gateway.SocialMediaCrawler;
 import com.hust.logistics.clean.infrastructure.config.AppConfig;
-import com.hust.logistics.clean.infrastructure.crawler.impl.MockCrawler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
+import java.util.List ;
+import 
 import java.time.Instant;
 import java.util.List;
 
@@ -36,18 +36,19 @@ class CrawlerModuleTest {
     @Test
     void factoryCreatesCrawlerByPlatform() {
         AppConfig config = baseConfig();
-        // Cung cấp một list trống hoặc các mock crawler
-        CrawlerFactory factory = new CrawlerFactory(List.of());
+        CrawlerFactory factory = new CrawlerFactory();
 
         SocialMediaCrawler mock = factory.create("mock", config);
-        // Twitter hiện tại sẽ trả về IllegalArgumentException nếu không được inject vào factory
+        SocialMediaCrawler twitter = factory.create("twitter", config);
+
         Assertions.assertEquals("mock", mock.platform());
+        Assertions.assertEquals("twitter", twitter.platform());
     }
 
     @Test
     void factoryThrowsForInvalidPlatform() {
         AppConfig config = baseConfig();
-        CrawlerFactory factory = new CrawlerFactory(List.of());
+        CrawlerFactory factory = new CrawlerFactory();
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> factory.create("unknown", config));
     }

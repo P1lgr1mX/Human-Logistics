@@ -8,8 +8,13 @@ public class YoutubeDTO {
     }
 
     public static class YoutubeItem {
-        public String id;
+        public Id id;
         public Snippet snippet;
+    }
+
+    public static class Id {
+        public String kind;
+        public String videoId;
     }
 
     public static class Snippet {

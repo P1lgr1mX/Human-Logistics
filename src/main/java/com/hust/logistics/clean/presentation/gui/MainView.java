@@ -78,16 +78,21 @@ public class MainView {
     private void onTaskSelected(ActionEvent event) {
         Button btn = (Button) event.getSource();
         String text = btn.getText();
-        if (text.startsWith("1")) selectedTaskId = 1;
-        else if (text.startsWith("2")) selectedTaskId = 2;
-        else if (text.startsWith("3")) selectedTaskId = 3;
-        else if (text.startsWith("4")) selectedTaskId = 4;
         
-        updateStatus("Đã chọn: " + text);
+        // Reset style cho tất cả các nút (đơn giản hóa)
+        System.out.println("USER_ACTION: CLICKED SIDEBAR BUTTON: " + text);
+
+        if (text.contains("1")) selectedTaskId = 1;
+        else if (text.contains("2")) selectedTaskId = 2;
+        else if (text.contains("3")) selectedTaskId = 3;
+        else if (text.contains("4")) selectedTaskId = 4;
+        
+        updateStatus("Đã chọn Nhiệm vụ " + selectedTaskId + ": " + getTaskName(selectedTaskId));
     }
 
     @FXML
     private void handleRunAnalysis() {
+        System.out.println("USER_ACTION: CLICKED RUN ANALYSIS - TASK ID: " + selectedTaskId);
         if (startDatePicker.getValue() == null || endDatePicker.getValue() == null) {
             updateStatus("Vui lòng chọn ngày bắt đầu và ngày kết thúc.");
             return;
@@ -233,6 +238,7 @@ public class MainView {
     }
 
     private javafx.scene.chart.PieChart createSatisfactionChart(AnalysisResult result) {
+        System.out.println("DEBUG SATISFACTION - SUMMARY: " + result.getSummary());
         javafx.scene.chart.PieChart pieChart = new javafx.scene.chart.PieChart();
         pieChart.setTitle("MỨC ĐỘ HÀI LÒNG CỨU TRỢ TỔNG THỂ");
         pieChart.setLabelsVisible(true);
@@ -257,6 +263,7 @@ public class MainView {
     }
 
     private javafx.scene.chart.BarChart<String, Number> createDamageChart(AnalysisResult result) {
+        System.out.println("DEBUG DAMAGE - SUMMARY: " + result.getSummary());
         javafx.scene.chart.CategoryAxis xAxis = new javafx.scene.chart.CategoryAxis();
         javafx.scene.chart.NumberAxis yAxis = new javafx.scene.chart.NumberAxis();
         yAxis.setLabel("Số vụ ghi nhận");

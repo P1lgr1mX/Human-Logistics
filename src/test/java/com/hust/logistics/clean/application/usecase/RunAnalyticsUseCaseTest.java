@@ -1,5 +1,5 @@
 package com.hust.logistics.clean.application.usecase;
-
+import java.util.List ;
 import com.hust.logistics.clean.application.service.LogisticsService;
 import com.hust.logistics.clean.domain.entity.AnalysisResult;
 import com.hust.logistics.clean.domain.entity.SocialPost;
@@ -39,6 +39,9 @@ class RunAnalyticsUseCaseTest {
     }
 
     private static class StubCrawlerFactory extends CrawlerFactory {
+        public StubCrawlerFactory() {
+            super(List.of());
+        }
         @Override
         public SocialMediaCrawler create(String platform, AppConfig config) {
             return new StubCrawler();

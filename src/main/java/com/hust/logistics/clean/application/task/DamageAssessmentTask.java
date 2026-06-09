@@ -14,7 +14,7 @@ import java.util.Map;
  * Statistics are used for Bar Chart visualization.
  */
 public class DamageAssessmentTask implements AnalyticsTask {
-    private static final String TASK_NAME = "damage-assessment";
+    private static final String TASK_NAME = "task-damage";
     private final AnalysisClient analysisClient;
     private final AppConfig config;
 

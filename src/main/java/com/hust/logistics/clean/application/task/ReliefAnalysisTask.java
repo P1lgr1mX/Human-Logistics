@@ -32,15 +32,9 @@ public class ReliefAnalysisTask implements AnalyticsTask {
         }
 
         String categories = String.join(", ", config.getReliefCategories());
-        String prompt = "NHIỆM VỤ: Phân tích mức độ hài lòng của công chúng đối với công tác cứu trợ các mặt hàng: " + categories + ".\n" +
-                "YÊU CẦU:\n" +
-                "1. Đánh giá tỷ lệ Hài lòng, Trung lập và Không hài lòng dựa trên nội dung các bài đăng.\n" +
-                "2. Tóm tắt các lý do chính khiến người dân hài lòng hoặc chưa hài lòng.\n" +
-                "3. Định dạng kết quả báo cáo rõ ràng.\n\n" +
-                "BẮT BUỘC: Cuối báo cáo phải có dòng dữ liệu sau để vẽ biểu đồ:\n" +
-                "SATISFACTION_DATA: HAPPY=x, NEUTRAL=y, UNHAPPY=z\n" +
-                "(Với x, y, z là tỷ lệ phần trăm, tổng bằng 100).";
+        String prompt = "NHIỆM VỤ: Phân tích mức độ hài lòng về cứu trợ (" + categories + "). " +
+                "SATISFACTION_DATA: HAPPY=x, NEUTRAL=y, UNHAPPY=z";
 
-        return analysisClient.analyze(prompt, posts);
+        return analysisClient.analyze(TASK_NAME, posts);
     }
 }

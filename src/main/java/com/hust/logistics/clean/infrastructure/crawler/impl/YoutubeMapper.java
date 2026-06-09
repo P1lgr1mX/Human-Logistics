@@ -18,7 +18,7 @@ public class YoutubeMapper {
         
         return response.items.stream()
                 .map(item -> new SocialPost(
-                        item.id, 
+                        item.id != null ? item.id.videoId : "unknown", 
                         "YOUTUBE", 
                         item.snippet.description, 
                         Instant.now(), 
