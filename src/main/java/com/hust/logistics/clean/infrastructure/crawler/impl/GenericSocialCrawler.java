@@ -1,5 +1,7 @@
-package com.hust.logistics.clean.infrastructure.crawler;
+package com.hust.logistics.clean.infrastructure.crawler.impl;
 
+import com.hust.logistics.clean.infrastructure.crawler.impl.MockCrawler;
+import com.hust.logistics.clean.infrastructure.crawler.impl.GenericSocialCrawler;
 import com.hust.logistics.clean.domain.entity.SocialPost;
 import com.hust.logistics.clean.domain.gateway.SocialMediaCrawler;
 import com.hust.logistics.clean.infrastructure.config.AppConfig;
