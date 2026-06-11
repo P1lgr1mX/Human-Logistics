@@ -5,89 +5,161 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" 
-            prefHeight="750.0" prefWidth="1100.0" style="-fx-background-color: #f8f9fa;" 
-            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
-            fx:controller="com.hust.logistics.clean.presentation.gui.MainView">
-   
-   <left>
-      <VBox prefWidth="260.0" spacing="20.0" style="-fx-background-color: #ff0000;" BorderPane.alignment="CENTER">
-         <children>
-            <Label text="LOGISTICS AI (FXML)" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="22.0" />
-               </font>
-            </Label>
-            <Separator opacity="0.3" />
-            <VBox spacing="10.0">
-               <children>
-                  <Button fx:id="btnTask1" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onTaskSelected" styleClass="sidebar-btn" text="1. Xu hướng tâm lý" />
-                  <Button fx:id="btnTask2" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onTaskSelected" styleClass="sidebar-btn" text="2. Đánh giá thiệt hại" />
-                  <Button fx:id="btnTask3" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onTaskSelected" styleClass="sidebar-btn" text="3. Hài lòng cứu trợ" />
-                  <Button fx:id="btnTask4" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onTaskSelected" styleClass="sidebar-btn" text="4. Theo dõi xu hướng" />
-               </children>
-            </VBox>
-         </children>
-         <padding>
-            <Insets bottom="30.0" left="15.0" right="15.0" top="30.0" />
-         </padding>
-      </VBox>
-   </left>
+<BorderPane
+        xmlns="http://javafx.com/javafx/17"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="com.hust.logistics.clean.presentation.gui.MainView"
+        prefWidth="1100"
+        prefHeight="750"
+        stylesheets="@style.css">
 
-   <center>
-      <VBox spacing="15.0" BorderPane.alignment="CENTER">
-         <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-         </padding>
-         <children>
-            <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);">
-               <children>
-                  <VBox spacing="5.0">
-                     <children>
-                        <Label text="Từ khóa:" />
-                        <TextField fx:id="keywordsField" prefWidth="200.0" promptText="bão Yagi, lũ lụt..." />
-                     </children>
-                  </VBox>
-                  <VBox spacing="5.0">
-                     <children>
-                        <Label text="Từ ngày:" />
-                        <DatePicker fx:id="startDatePicker" />
-                     </children>
-                  </VBox>
-                  <VBox spacing="5.0">
-                     <children>
-                        <Label text="Đến ngày:" />
-                        <DatePicker fx:id="endDatePicker" />
-                     </children>
-                  </VBox>
-                  <Button fx:id="btnRun" mnemonicParsing="false" onAction="#handleRunAnalysis" prefHeight="40.0" prefWidth="150.0" styleClass="btn-run" text="CHẠY PHÂN TÍCH" />
-               </children>
-               <padding>
-                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-               </padding>
+    <!-- SIDEBAR -->
+    <left>
+        <VBox prefWidth="240"
+              spacing="15"
+              styleClass="sidebar">
+
+            <padding>
+                <Insets top="25" left="12" right="12" bottom="25"/>
+            </padding>
+
+            <Pane prefHeight="0.2"/>
+
+            <Label text="LOGISTICS AI (FXML)"
+                   styleClass="logo-label"/>
+
+            <Pane prefHeight="0.2"/>
+            
+            <Separator/>
+
+            <Pane prefHeight="0.2"/>
+
+            <Button fx:id="btnTask1"
+                    text="💛  1. Xu hướng tâm lý"
+                    onAction="#onTaskSelected"
+                    maxWidth="Infinity"
+                    styleClass="menu-btn"/>
+
+            <Button fx:id="btnTask2"
+                    text="📋  2. Đánh giá thiệt hại"
+                    onAction="#onTaskSelected"
+                    maxWidth="Infinity"
+                    styleClass="menu-btn"/>
+
+            <Button fx:id="btnTask3"
+                    text="🤝  3. Hài lòng cứu trợ"
+                    onAction="#onTaskSelected"
+                    maxWidth="Infinity"
+                    styleClass="menu-btn"/>
+
+            <Button fx:id="btnTask4"
+                    text="📈  4. Theo dõi xu hướng"
+                    onAction="#onTaskSelected"
+                    maxWidth="Infinity"
+                    styleClass="menu-btn"/>
+            
+            <Separator/>
+
+            <Pane VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </left>
+
+    <!-- MAIN CONTENT -->
+    <center>
+
+        <VBox spacing="15">
+
+            <padding>
+                <Insets top="20" left="20" right="20" bottom="20"/>
+            </padding>
+
+            <!-- FILTER BAR -->
+            <HBox spacing="30"
+                  alignment="CENTER_LEFT"
+                  styleClass="top-card">
+
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Từ khóa:"/>
+                    <StackPane maxWidth="400">
+                        <TextField fx:id="keywordsField"
+                                   prefWidth="380"
+                                   promptText="bão Yagi, lũ lụt, ..."/>
+                        <Button text="x"
+                                onAction="#clearKeyword"
+                                StackPane.alignment="CENTER_RIGHT"
+                                style="
+                                    -fx-background-color: transparent;
+                                    -fx-cursor: hand;
+                                    -fx-font-size: 14px;
+                                    "/>
+                    </StackPane>
+                </VBox>
+
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Từ ngày:"/>
+                    <DatePicker fx:id="startDatePicker"
+                                prefWidth="320"
+                                style="
+                                    -fx-cursor: hand;
+                                "/>
+                </VBox>
+
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Đến ngày:"/>
+                    <DatePicker fx:id="endDatePicker"
+                                prefWidth="320"
+                                style="
+                                    -fx-cursor: hand;
+                                "/>
+                </VBox>
+
+                <Button fx:id="btnRun"
+                        text="CHẠY PHÂN TÍCH"
+                        onAction="#handleRunAnalysis"
+                        styleClass="run-button"/>
             </HBox>
 
-            <StackPane fx:id="displayArea" VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);">
-               <children>
-                  <Label fx:id="placeholderLabel" text="Kết quả phân tích AI sẽ hiển thị tại đây" textFill="#949494">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                  </Label>
-                  <ProgressIndicator fx:id="progressIndicator" maxHeight="60.0" maxWidth="60.0" visible="false" />
-               </children>
+            <!-- REPORT AREA -->
+            <StackPane fx:id="displayArea"
+                       VBox.vgrow="ALWAYS"
+                       styleClass="report-card">
+
+                <VBox alignment="TOP_CENTER"
+                      spacing="15">
+
+                    <padding>
+                        <Insets top="30"/>
+                    </padding>
+
+                    <Label text="BÁO CÁO PHÂN TÍCH HỆ THỐNG"
+                           styleClass="report-title"/>
+
+                    <Label text="Nhiệm vụ: Chọn chức năng bên trái"
+                           styleClass="report-subtitle"/>
+
+                    <Separator prefWidth="600"/>
+
+                    <Label fx:id="placeholderLabel"
+                           text="Kết quả phân tích AI sẽ hiển thị tại đây"
+                           styleClass="placeholder"/>
+
+                    <ProgressIndicator fx:id="progressIndicator"
+                                       visible="false"/>
+                </VBox>
+
             </StackPane>
 
-            <HBox alignment="CENTER_LEFT">
-               <children>
-                  <Label fx:id="statusLabel" text="Sẵn sàng" textFill="GRAY">
-                     <font>
-                        <Font size="12.0" />
-                     </font>
-                  </Label>
-               </children>
+            <!-- STATUS -->
+            <HBox>
+
+                <Label fx:id="statusLabel"
+                       text="Sẵn sàng"
+                       styleClass="status-label"/>
+
             </HBox>
-         </children>
-      </VBox>
-   </center>
+
+        </VBox>
+
+    </center>
+
 </BorderPane>

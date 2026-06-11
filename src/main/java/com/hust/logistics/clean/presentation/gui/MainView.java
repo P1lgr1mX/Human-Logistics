@@ -1,8 +1,15 @@
 package com.hust.logistics.clean.presentation.gui;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+
+import org.springframework.stereotype.Component;
+
 import com.hust.logistics.clean.application.service.LogisticsService;
 import com.hust.logistics.clean.domain.entity.AnalysisResult;
 import com.hust.logistics.clean.infrastructure.config.AppConfig;
+
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -12,18 +19,23 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Separator;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.ZoneId;
 
 @Component
 public class MainView {
@@ -38,6 +50,10 @@ public class MainView {
     @FXML private ProgressIndicator progressIndicator;
     @FXML private Label statusLabel;
     @FXML private Label placeholderLabel;
+    @FXML private Button btnTask1;
+    @FXML private Button btnTask2;
+    @FXML private Button btnTask3;
+    @FXML private Button btnTask4;
 
     private int selectedTaskId = 1;
 
@@ -86,6 +102,19 @@ public class MainView {
         else if (text.contains("2")) selectedTaskId = 2;
         else if (text.contains("3")) selectedTaskId = 3;
         else if (text.contains("4")) selectedTaskId = 4;
+
+        // Bỏ trạng thái selected của tất cả các nút
+        btnTask1.getStyleClass().remove("selected-menu");
+        btnTask2.getStyleClass().remove("selected-menu");
+        btnTask3.getStyleClass().remove("selected-menu");
+        btnTask4.getStyleClass().remove("selected-menu");
+
+        // Nút vừa click được chọn
+        Button clickedButton = (Button) event.getSource();
+
+        if (!clickedButton.getStyleClass().contains("selected-menu")) {
+            clickedButton.getStyleClass().add("selected-menu");
+        }
         
         updateStatus("Đã chọn Nhiệm vụ " + selectedTaskId + ": " + getTaskName(selectedTaskId));
     }
@@ -126,6 +155,11 @@ public class MainView {
         });
 
         new Thread(task).start();
+    }
+
+    @FXML
+    private void clearKeyword() {
+        keywordsField.clear();
     }
 
     private void showResult(AnalysisResult result) {
