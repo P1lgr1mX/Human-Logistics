@@ -128,6 +128,8 @@ public class MainView {
         }
 
         String keywords = keywordsField.getText();
+        System.out.println("UI RAW KEYWORD = [" + keywords + "]"); // check keyword
+
         String start = startDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toString();
         String end = endDatePicker.getValue().atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant().toString();
 

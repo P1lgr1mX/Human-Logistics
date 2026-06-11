@@ -1,17 +1,22 @@
 
 package com.hust.logistics.clean.application.service;
 
-import com.hust.logistics.clean.application.task.*;
+import java.time.Instant;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.hust.logistics.clean.application.task.AnalyticsTask;
+import com.hust.logistics.clean.application.task.DamageAssessmentTask;
+import com.hust.logistics.clean.application.task.GenericAnalyticsTask;
+import com.hust.logistics.clean.application.task.ReliefAnalysisTask;
+import com.hust.logistics.clean.application.task.SentimentTrendTask;
 import com.hust.logistics.clean.domain.entity.AnalysisResult;
 import com.hust.logistics.clean.domain.entity.SocialPost;
 import com.hust.logistics.clean.domain.gateway.AnalysisClient;
 import com.hust.logistics.clean.domain.gateway.SocialMediaCrawler;
 import com.hust.logistics.clean.infrastructure.config.AppConfig;
 import com.hust.logistics.clean.infrastructure.crawler.CrawlerFactory;
-import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.util.List;
 
 @Service
 public class LogisticsService {
@@ -30,7 +35,10 @@ public class LogisticsService {
         try {
             if (keywords != null && !keywords.isBlank()) {
                 config.setKeywords(List.of(keywords.split("[,;]")));
+            } else {
+                config.setKeywords(List.of());
             }
+            
             if (startTime != null && !startTime.isBlank()) {
                 config.setStartTime(Instant.parse(startTime));
             }
@@ -42,7 +50,9 @@ public class LogisticsService {
         }
 
         SocialMediaCrawler crawler = crawlerFactory.create(config.getPlatform(), config);
-        List<SocialPost> posts = crawler.crawl();
+        List<SocialPost> posts = (keywords == null || keywords.isBlank())
+                                ? crawler.crawl()
+                                : crawler.crawlByKeyword(keywords);
 
 
         if (posts.isEmpty()) {
