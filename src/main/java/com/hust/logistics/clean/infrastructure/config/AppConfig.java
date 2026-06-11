@@ -1,12 +1,12 @@
 package com.hust.logistics.clean.infrastructure.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = "app")
@@ -20,6 +20,7 @@ public class AppConfig {
     private List<String> reliefCategories = new ArrayList<>();
     private String platform = "mock";
     private AnalysisConfig analysis = new AnalysisConfig();
+    private String defaultKeyword;
 
     public String getPlatform() {
         return platform;
@@ -91,6 +92,14 @@ public class AppConfig {
 
     public void setAnalysis(AnalysisConfig analysis) {
         this.analysis = analysis;
+    }
+
+    public String getDefaultKeyword() {
+        return defaultKeyword;
+    }
+
+    public void setDefaultKeyword(String defaultKeyword) {
+        this.defaultKeyword = defaultKeyword;
     }
 
     public static class AnalysisConfig {

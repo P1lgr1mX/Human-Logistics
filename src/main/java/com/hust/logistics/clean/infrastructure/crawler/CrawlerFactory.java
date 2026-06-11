@@ -1,14 +1,15 @@
 package com.hust.logistics.clean.infrastructure.crawler;
 
-import com.hust.logistics.clean.domain.gateway.SocialMediaCrawler;
-import com.hust.logistics.clean.infrastructure.config.AppConfig;
-import com.hust.logistics.clean.infrastructure.crawler.impl.MockCrawler;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
+import com.hust.logistics.clean.domain.gateway.SocialMediaCrawler;
+import com.hust.logistics.clean.infrastructure.config.AppConfig;
+import com.hust.logistics.clean.infrastructure.crawler.impl.MockCrawler;
 
 @Component
 public class CrawlerFactory {
@@ -25,20 +26,29 @@ public class CrawlerFactory {
     }
 
     public SocialMediaCrawler create(String platform, AppConfig config) {
-        if (platform == null || platform.isBlank()) {
-            platform = "mock";
-        }
-        String normalized = platform.toLowerCase(Locale.ROOT);
-        
-        SocialMediaCrawler crawler = crawlers.get(normalized);
-        if (crawler != null) {
-            return crawler;
-        }
+        try {
+            if (platform == null || platform.isBlank()) {
+                platform = "mock";
+            }
 
-        if ("mock".equals(normalized)) {
+            String normalized = platform.toLowerCase(Locale.ROOT);
+
+            SocialMediaCrawler crawler = crawlers.get(normalized);
+
+            if (crawler != null) {
+                return crawler;
+            }
+
+            System.err.println(
+                    "Unsupported platform: " + platform + ", fallback to mock crawler");
+
+            return new MockCrawler(config);
+
+        } catch (Exception e) {
+            System.err.println(
+                    "Error creating crawler: " + e.getMessage());
+
             return new MockCrawler(config);
         }
-
-        throw new IllegalArgumentException("Unsupported platform: " + platform);
     }
 }

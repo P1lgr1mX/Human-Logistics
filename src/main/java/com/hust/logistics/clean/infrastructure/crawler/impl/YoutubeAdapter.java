@@ -3,7 +3,6 @@ package com.hust.logistics.clean.infrastructure.crawler.impl;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -35,23 +34,29 @@ public class YoutubeAdapter implements SocialMediaCrawler {
 
     @Override
     public List<SocialPost> crawl() {
-        String query = "humanitarian logistics";
-        if (appConfig.getKeywords() != null && !appConfig.getKeywords().isEmpty()) {
-            query = String.join(" ", appConfig.getKeywords());
-        }
-        return crawlByKeyword(query);
+        return crawlByKeyword(null);
     }
 
     @Override
     public List<SocialPost> crawlByKeyword(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            keyword = appConfig.getDefaultKeyword();
+            System.out.println("USED DEFAULT KEYWORD: " + keyword);
+        } else {
+            System.out.println("USED UI KEYWORD: " + keyword);
+        }
+        
         String startTime = appConfig.getStartTime().toString(); // ISO-8601 format
         String endTime = appConfig.getEndTime().toString();
         
         String url = String.format("%s/search?part=snippet&q=%s&key=%s&type=video&publishedAfter=%s&publishedBefore=%s&maxResults=50",
                 config.getBaseUrl(), keyword, config.getApiKey(), startTime, endTime);
         try {
-            YoutubeVideoResponse response = restTemplate.getForObject(url, YoutubeVideoResponse.class);
+            YoutubeVideoResponse response =
+                        restTemplate.getForObject(url, YoutubeVideoResponse.class);
+
             return mapper.toSocialPosts(response);
+
         } catch (Exception e) {
             System.err.println("Failed to crawl Youtube posts: " + e.getMessage());
             return Collections.emptyList();
