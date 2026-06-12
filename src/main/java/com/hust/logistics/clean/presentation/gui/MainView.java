@@ -257,7 +257,7 @@ public class MainView {
         
         // Bóc tách dữ liệu động: dd/MM=val
         String summary = result.getSummary();
-        System.out.println("DEBUG TREND - SUMMARY: " + summary);
+        System.out.println("DEBUG TREND - SUMMARY: " + summary); // debug
         
         java.util.regex.Pattern p = java.util.regex.Pattern.compile("(\\d{2}/\\d{2})=(\\d+)");
         java.util.regex.Matcher m = p.matcher(summary);
@@ -267,8 +267,9 @@ public class MainView {
             series.getData().add(new javafx.scene.chart.XYChart.Data<>(m.group(1), Integer.parseInt(m.group(2))));
             count++;
         }
-        System.out.println("DEBUG TREND - FOUND POINTS: " + count);
+        System.out.println("DEBUG TREND - FOUND POINTS: " + count); // debug
 
+        lineChart.getData().clear();
         lineChart.getData().add(series);
         return lineChart;
     }
@@ -284,6 +285,7 @@ public class MainView {
         int neutral = extractValue(result.getSummary(), "NEUTRAL=(\\d+)");
         int unhappy = extractValue(result.getSummary(), "UNHAPPY=(\\d+)");
 
+        pieChart.getData().clear();
         pieChart.getData().add(new javafx.scene.chart.PieChart.Data("Hài lòng (" + happy + "%)", happy));
         pieChart.getData().add(new javafx.scene.chart.PieChart.Data("Trung lập (" + neutral + "%)", neutral));
         pieChart.getData().add(new javafx.scene.chart.PieChart.Data("Không hài lòng (" + unhappy + "%)", unhappy));
@@ -326,6 +328,7 @@ public class MainView {
             series.getData().add(new javafx.scene.chart.XYChart.Data<>(cat, val));
         }
 
+        barChart.getData().clear();
         barChart.getData().add(series);
         
         // Tùy chỉnh màu sắc (màu cam chuyên nghiệp cho cứu hộ)
@@ -365,6 +368,7 @@ public class MainView {
         series.getData().add(new javafx.scene.chart.XYChart.Data<>("Trung lập", neu));
         series.getData().add(new javafx.scene.chart.XYChart.Data<>("Tiêu cực", neg));
 
+        barChart.getData().clear();
         barChart.getData().add(series);
         
         Platform.runLater(() -> {
