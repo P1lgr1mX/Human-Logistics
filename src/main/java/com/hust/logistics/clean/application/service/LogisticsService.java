@@ -1,4 +1,3 @@
-
 package com.hust.logistics.clean.application.service;
 
 import java.time.Instant;
@@ -31,14 +30,13 @@ public class LogisticsService {
     }
 
     public AnalysisResult runTask(int taskId, String keywords, String startTime, String endTime) {
-        // Update config with dynamic values if provided
         try {
             if (keywords != null && !keywords.isBlank()) {
                 config.setKeywords(List.of(keywords.split("[,;]")));
             } else {
                 config.setKeywords(List.of());
             }
-            
+
             if (startTime != null && !startTime.isBlank()) {
                 config.setStartTime(Instant.parse(startTime));
             }
@@ -46,27 +44,31 @@ public class LogisticsService {
                 config.setEndTime(Instant.parse(endTime));
             }
         } catch (Exception e) {
-            // Fallback to default if parsing fails
+            System.err.println("Error updating config: " + e.getMessage());
         }
 
-        SocialMediaCrawler crawler = crawlerFactory.create(config.getPlatform(), config);
-        List<SocialPost> posts = (keywords == null || keywords.isBlank())
-                                ? crawler.crawl()
-                                : crawler.crawlByKeyword(keywords);
+        try {
+            SocialMediaCrawler crawler = crawlerFactory.create(config.getPlatform(), config);
+            List<SocialPost> posts = (keywords == null || keywords.isBlank())
+                    ? crawler.crawl()
+                    : crawler.crawlByKeyword(keywords);
 
+            if (posts.isEmpty()) {
+                return new AnalysisResult("Error", "KHÔNG TÌM THẤY DỮ LIỆU: Vui lòng kiểm tra lại từ khóa hoặc API Key của YouTube. Hiện tại hệ thống không thể lấy thông tin từ YouTube.", 0.0);
+            }
 
-        if (posts.isEmpty()) {
-            return new AnalysisResult("Error", "KHÔNG TÌM THẤY DỮ LIỆU: Vui lòng kiểm tra lại từ khóa hoặc API Key của YouTube. Hiện tại hệ thống không thể lấy thông tin từ YouTube.", 0.0);
+            AnalyticsTask task = switch (taskId) {
+                case 1 -> new SentimentTrendTask(analysisClient);
+                case 2 -> new DamageAssessmentTask(analysisClient, config);
+                case 3 -> new ReliefAnalysisTask(analysisClient, config);
+                case 4 -> new GenericAnalyticsTask("task-trend", analysisClient);
+                default -> throw new IllegalArgumentException("Invalid task ID: " + taskId);
+            };
+
+            return task.execute(posts);
+        } catch (Exception e) {
+            System.err.println("Error running task: " + e.getMessage());
+            return new AnalysisResult("Error", "Lỗi hệ thống: " + e.getMessage(), 0.0);
         }
-
-        AnalyticsTask task = switch (taskId) {
-            case 1 -> new SentimentTrendTask(analysisClient);
-            case 2 -> new DamageAssessmentTask(analysisClient, config);
-            case 3 -> new ReliefAnalysisTask(analysisClient, config);
-            case 4 -> new GenericAnalyticsTask("task-trend", analysisClient);
-            default -> throw new IllegalArgumentException("Invalid task ID: " + taskId);
-        };
-
-        return task.execute(posts);
     }
 }

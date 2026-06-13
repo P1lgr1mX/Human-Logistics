@@ -4,10 +4,10 @@ spring:
 
 youtube:
   base-url: https://www.googleapis.com/youtube/v3
-  api-key: "API_KEY"
+  api-key: "API_KEY_HERE"
 
 app:
-  defaultKeyword: humanitarian logistics
+  defaultKeyword: "bão Yagi"
   keywords:
     - "bão Yagi"
     - "cứu trợ lũ lụt"
@@ -15,15 +15,11 @@ app:
     - "thiếu lương thực"
     - "sập cầu"
     - "ngập lụt"
-  hashtags:
-    - "#YagiTyphoon"
-    - "#CuuTroMienBac"
-    - "#TinhThanVietNam"
   platform: "youtube"
   startTime: "2024-09-06T00:00:00Z"
   endTime: "2024-09-20T23:59:59Z"
   apiKeys:
-    gemini-3.1-flash-lite: "API_KEY"
+    gemini-3.1-flash-lite: "API_KEY_HERE"
   damageCategories:
     - "Người bị ảnh hưởng"
     - "Gián đoạn kinh tế sản xuất"

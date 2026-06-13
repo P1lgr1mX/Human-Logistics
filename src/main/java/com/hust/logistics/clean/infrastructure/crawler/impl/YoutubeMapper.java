@@ -15,30 +15,26 @@ public class YoutubeMapper {
     public List<SocialPost> toSocialPosts(YoutubeVideoResponse response) {
         if (response == null || response.items == null || response.items.isEmpty()) {
             return Collections.emptyList();
-        } 
-        
-        return response.items.stream()
-                .map(item -> new SocialPost(
-                        item != null && item.id != null 
-                                ? item.id.videoId 
-                                : "unknown",
+        }
+
+        try {
+            return response.items.stream()
+                    .map(item -> {
+                        String id = (item != null && item.id != null) ? item.id.videoId : "unknown";
+                        String content = "";
+                        String author = "Unknown Title";
                         
-                        "YOUTUBE",
-
-                        item != null
-                                && item.snippet != null
-                                && item.snippet.description != null
-                                ? item.snippet.description
-                                : "",
-
-                        Instant.now(),
-
-                        item != null
-                                && item.snippet != null
-                                && item.snippet.title != null
-                                ? item.snippet.title
-                                : "Unknown Title"
-                ))
-                .collect(Collectors.toList());
+                        if (item != null && item.snippet != null) {
+                            content = item.snippet.description != null ? item.snippet.description : "";
+                            author = item.snippet.title != null ? item.snippet.title : "Unknown Title";
+                        }
+                        
+                        return new SocialPost(id, "YOUTUBE", content, Instant.now(), author);
+                    })
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            System.err.println("Error mapping YouTube response: " + e.getMessage());
+            return Collections.emptyList();
+        }
     }
 }
