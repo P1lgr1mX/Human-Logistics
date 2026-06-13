@@ -122,13 +122,27 @@ public class MainView {
     @FXML
     private void handleRunAnalysis() {
         System.out.println("USER_ACTION: CLICKED RUN ANALYSIS - TASK ID: " + selectedTaskId);
+        
+        // 1. Lấy và kiểm tra từ khóa trước
+        String keywords = keywordsField.getText();
+        System.out.println("UI RAW KEYWORD = [" + keywords + "]"); // check keyword
+
+        // Thêm thông báo nếu từ khóa trống
+        if (keywords == null || keywords.trim().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Thiếu thông tin");
+            alert.setHeaderText(null);
+            alert.setContentText("Vui lòng nhập từ khóa trước khi chạy phân tích!");
+            alert.showAndWait();
+            
+            updateStatus("Lỗi: Chưa nhập từ khóa.");
+            return; 
+        }
+
         if (startDatePicker.getValue() == null || endDatePicker.getValue() == null) {
             updateStatus("Vui lòng chọn ngày bắt đầu và ngày kết thúc.");
             return;
         }
-
-        String keywords = keywordsField.getText();
-        System.out.println("UI RAW KEYWORD = [" + keywords + "]"); // check keyword
 
         String start = startDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toString();
         String end = endDatePicker.getValue().atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant().toString();
