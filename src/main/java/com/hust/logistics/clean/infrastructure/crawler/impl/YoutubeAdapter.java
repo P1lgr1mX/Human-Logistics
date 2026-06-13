@@ -16,10 +16,10 @@ import com.hust.logistics.clean.infrastructure.crawler.impl.YoutubeDTO.YoutubeVi
 public class YoutubeAdapter implements SocialMediaCrawler {
 
     private final RestTemplate restTemplate;
-    private final YoutubeConfig config; 
+    private final YoutubeConfig config;
     private final AppConfig appConfig;
-    private final YoutubeMapper mapper; 
-    
+    private final YoutubeMapper mapper;
+
     public YoutubeAdapter(RestTemplate restTemplate, YoutubeConfig config, AppConfig appConfig, YoutubeMapper mapper) {
         this.restTemplate = restTemplate;
         this.config = config;
@@ -39,22 +39,21 @@ public class YoutubeAdapter implements SocialMediaCrawler {
 
     @Override
     public List<SocialPost> crawlByKeyword(String keyword) {
-        if (keyword == null || keyword.isBlank()) {
-            keyword = appConfig.getDefaultKeyword();
-            System.out.println("USED DEFAULT KEYWORD: " + keyword);
-        } else {
-            System.out.println("USED UI KEYWORD: " + keyword);
-        }
-        
-        String startTime = appConfig.getStartTime().toString(); // ISO-8601 format
-        String endTime = appConfig.getEndTime().toString();
-        
-        String url = String.format("%s/search?part=snippet&q=%s&key=%s&type=video&publishedAfter=%s&publishedBefore=%s&maxResults=50",
-                config.getBaseUrl(), keyword, config.getApiKey(), startTime, endTime);
         try {
-            YoutubeVideoResponse response =
-                        restTemplate.getForObject(url, YoutubeVideoResponse.class);
+            if (keyword == null || keyword.isBlank()) {
+                keyword = appConfig.getDefaultKeyword();
+                System.out.println("USED DEFAULT KEYWORD: " + keyword);
+            } else {
+                System.out.println("USED UI KEYWORD: " + keyword);
+            }
 
+            String startTime = appConfig.getStartTime().toString();
+            String endTime = appConfig.getEndTime().toString();
+
+            String url = String.format("%s/search?part=snippet&q=%s&key=%s&type=video&publishedAfter=%s&publishedBefore=%s&maxResults=50",
+                    config.getBaseUrl(), keyword, config.getApiKey(), startTime, endTime);
+
+            YoutubeVideoResponse response = restTemplate.getForObject(url, YoutubeVideoResponse.class);
             return mapper.toSocialPosts(response);
 
         } catch (Exception e) {

@@ -18,7 +18,7 @@ public class AppConfig {
     private Map<String, String> apiKeys = Map.of();
     private List<String> damageCategories = new ArrayList<>();
     private List<String> reliefCategories = new ArrayList<>();
-    private String platform = "mock";
+    private String platform = "youtube";
     private AnalysisConfig analysis = new AnalysisConfig();
     private String defaultKeyword;
 
@@ -103,11 +103,11 @@ public class AppConfig {
     }
 
     public static class AnalysisConfig {
-        private String provider = "deepseek";
-        private String endpoint = "https://api.deepseek.com/v1/chat/completions";
-        private String model = "deepseek-chat";
-        private int connectTimeoutMs = 3000;
-        private int readTimeoutMs = 10000;
+        private String provider = "google";
+        private String endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent";
+        private String model = "gemini-3.1-flash-lite";
+        private int connectTimeoutMs = 5000;
+        private int readTimeoutMs = 30000;
 
         public String getProvider() {
             return provider;

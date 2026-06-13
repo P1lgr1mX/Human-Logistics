@@ -10,13 +10,11 @@ public class YoutubeConfig {
     private String baseUrl = "https://www.googleapis.com/youtube/v3";
     private String apiKey;
 
-    // Getters and Setters
     public String getBaseUrl() {
         return baseUrl;
     }
 
     public void setBaseUrl(String baseUrl) {
-        /* Chú ý: Dòng này đã được sửa dấu ngoặc nhọn kết thúc của class */
         this.baseUrl = baseUrl;
     }
 
